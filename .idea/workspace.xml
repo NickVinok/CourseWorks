@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="39f64b9e-827b-4db3-bb9d-a24d052655c2" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1VOmyGaGfy6RWSO6VGvxZSgN2xR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nutrient/backend/nutrientSpring" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="39f64b9e-827b-4db3-bb9d-a24d052655c2" name="Default Changelist" comment="" />
+      <created>1577132767137</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1577132767137</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="767" y="229" key="#com.intellij.ide.util.MemberChooser" timestamp="1579276967590">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="767" y="229" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1579276967590" />
+    <state x="649" y="325" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1577134087037">
+      <screen x="0" y="0" width="1600" height="870" />
+    </state>
+    <state x="649" y="325" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1600.870@0.0.1600.870" timestamp="1577134087037" />
+    <state x="743" y="283" width="436" height="501" key="FileChooserDialogImpl" timestamp="1580935912967">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="743" y="283" width="436" height="501" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1580935912967" />
+    <state x="639" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1580935831671">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="639" y="352" key="com.intellij.ide.util.TipDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1580935831671" />
+  </component>
+</project>
