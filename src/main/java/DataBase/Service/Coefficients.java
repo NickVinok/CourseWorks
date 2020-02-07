@@ -21,4 +21,5 @@ public class Coefficients {
     //Относится к расчёту пожара пролива
     private double straitConcreteCoefficient=150;
     private double straitPrimerCoatingCoefficient=20;
+    private double freeFallAcceleration = 9.81;
 }

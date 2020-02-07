@@ -10,6 +10,8 @@ public class Amount {
     private double volume;
     //TODO БРАТЬ НЕ ОТСЮДА, А ИЗ ПРИХОДЯЩЕГО ЗАПРОСА
     private double currentTemperature;
+    private double windSpeed;
+    private double airDensity;
 
     public double getMass(){
         return this.mass;
