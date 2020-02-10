@@ -1,10 +1,10 @@
-package Math.AffectedAreaModels.Fire;
+package Mathematics.AffectedAreaModels.Fire;
 
 import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Math.MatterAmountCalculation.Amount;
+import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class StraightFire implements BaseFireModel {
+public class TorchFire implements BaseFireModel {
     private ArrayList<Double> thermalRadiationIntensity;
 
     private ArrayList<Double> irradianceAngleCoefficients;
@@ -26,22 +26,9 @@ public class StraightFire implements BaseFireModel {
 
     @Override
     public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise) {
-        //Его можно взять из документа, приведённого ниже
-        //Но есть упрощённая версия
-        //Она считается на этапе определения количества участвующего в аварии вещества
-
-        //Здесь используется понятие площади пролива
-        //Его мы берём из документа TODO РД 03-26-2007
-
-        //Для вычисления эффективного диаметра пролива
-        double straitPane;
-        if (enterprise.getCavingArea()!=0){
-            //TODO брать коэффициент, в зависимости от типа поверхности, на которую идёт пролив
-            straitPane=amount.getVolume()*coefficients.getStraitConcreteCoefficient();
-        } else{
-            straitPane=enterprise.getCavingArea();
-        }
-        double effectiveDiameter=Math.sqrt(4*straitPane/Math.PI);
+        //Расчёт длины и ширины факела
+        double torchLength = coefficients.getTorchLengthCoefficient()*Math.pow(amount.getProductConsumption(), 0.4);
+        double effectiveDiameter=0.15*torchLength;
 
         //Удельная массовая скорость выгорания
         //TODO Мб возможно брать из базы
@@ -53,7 +40,7 @@ public class StraightFire implements BaseFireModel {
         double flameLength;
         double coefficient = amount.getWindSpeed()
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
-                    /substance.getFuelVapourDensity());
+                /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
                 /(amount.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
@@ -108,10 +95,10 @@ public class StraightFire implements BaseFireModel {
             double verticalIrradiance = 1/Math.PI *
                     (-1*E*Math.atan(D)
                             +E*((a*a+(b+1)*(b+1)-2*b*(1+a+Math.sin(angle)))/(A*B)) * Math.atan(A*D/B)
-                    +(flameAngleCos/C) * G);
+                            +(flameAngleCos/C) * G);
             double horizontalIrradiance = 1/Math.PI*
                     ((Math.atan(1/D) + (Math.sin(angle)/C)*G)
-                    -((a*a+(b+1)*(b+1) - 2*(b+1+a*b*Math.sin(angle))) / (A*B))*Math.atan(A*D/B));
+                            -((a*a+(b+1)*(b+1) - 2*(b+1+a*b*Math.sin(angle))) / (A*B))*Math.atan(A*D/B));
             irradianceAngleCoefficients.add(
                     Math.sqrt(verticalIrradiance*verticalIrradiance+horizontalIrradiance*horizontalIrradiance)
             );

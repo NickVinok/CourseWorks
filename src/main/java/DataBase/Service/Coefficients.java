@@ -22,4 +22,8 @@ public class Coefficients {
     private double straitConcreteCoefficient=150;
     private double straitPrimerCoatingCoefficient=20;
     private double freeFallAcceleration = 9.81;
+
+    //Относится к расчёту факельного горения
+    private double torchLengthCoefficient=15; //15 при истечении жидкой фазы; 13.5 при истечени паровой фазы; 12.5 при истечении сжатых газов
+
 }

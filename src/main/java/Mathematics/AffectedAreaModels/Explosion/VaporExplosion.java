@@ -1,10 +1,9 @@
-package Math.AffectedAreaModels.Explosion;
+package Mathematics.AffectedAreaModels.Explosion;
 
 import DataBase.Model.*;
 import DataBase.Repo.CloudCombustionModeRepo;
-import DataBase.Service.CloudCombustionService;
 import DataBase.Service.Coefficients;
-import Math.MatterAmountCalculation.Amount;
+import Mathematics.MatterAmountCalculation.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package Math.AffectedAreaModels.Fire;
+package Mathematics.AffectedAreaModels.Fire;
 
-import Math.AffectedAreaModels.BaseModel;
+import Mathematics.AffectedAreaModels.BaseModel;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,10 @@
-package Math.AffectedAreaModels.Explosion;
+package Mathematics.AffectedAreaModels.Explosion;
 
 import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Math.MatterAmountCalculation.Amount;
+import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
