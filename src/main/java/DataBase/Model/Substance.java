@@ -19,6 +19,8 @@ public class Substance {
     private double specificEvaporationRate; //Удельная теплота испарения жидкости кДж/кг
     private double fuelVapourDensity; //Плотность насыщенных паров топлива при температуре кипения кг\м3
     private double density; //Плотность жидкости кг/м3
+    private double specificEvaporationHeat; //Удельная теплота испарения сжиженного газа при температуре кипения жидкости
+    private double molarMass; //Молярная масса
 
     //TODO Нормально вставить декоратор от Hibernate
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

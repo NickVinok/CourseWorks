@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Department {
     @Id
     private long id;
-
+    private double square;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "clutterClassId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
