@@ -18,6 +18,7 @@ public class Amount {
     private double mass;
     private double volume;
     private double productConsumption;
+    private double evaporationTime=3600; //Ебануть в константы потом мб
 
     //TODO БРАТЬ НЕ ОТСЮДА, А ИЗ ПРИХОДЯЩЕГО ЗАПРОСА
     private double liquidTemperature;
@@ -25,16 +26,21 @@ public class Amount {
     private double windSpeed;
     private double airDensity;
     private double atmosphericPressure;
-    //TODO спросить, что вообще нужно класть в базу, касательно оборудования
     private double equipmentPressure;
+
+    private double holeHeight;
+    private double holeDiameter;
+
 
     public void calculate(Equipment equipment, Department dep, Substance substance, TmpClassForInputValues input){
         double massCoefficient = input.getFullnessPercent()*equipment.getVolume()*substance.getDensity();
         double quantityIB = this.quantityOfImmediatelyBoilingLiquidCalculation(massCoefficient, substance);
         double quantityLV = quantityOfLiquidInVaporFormCalculation(input.getFullnessPercent(), substance, equipment);
         double quantityLS = quantityOfLiquidSteamEvaporatingFromCane(substance, dep);
-        double quantityML = quantityOfMirrorLiquidEvaporating(substance);
+        double quantityML = quantityOfMirrorLiquidEvaporating(substance, massCoefficient, quantityIB);
         this.mass = quantityIB+quantityLV+quantityLS+quantityML;
+
+        calculateProductConsumption(substance, equipment, input);
     }
 
     private double quantityOfImmediatelyBoilingLiquidCalculation(double massCoefficient, Substance substance){
@@ -64,13 +70,21 @@ public class Amount {
         return firstPart*secondPart;
     }
 
-    private double quantityOfMirrorLiquidEvaporating(Substance substance){
+    private double quantityOfMirrorLiquidEvaporating(Substance substance, double massCoef, double immediateBoilingLiquidMass){
         double firstPartSteamPressure = (1/(substance.getBoilingTemperature()+273)-1/(273+currentTemperature));
         double secondPartSteamPressure = (substance.getSpecificEvaporationHeat()*substance.getMolarMass()
                 /coefficients.getUniversalGasConst());
         double steamPressure = atmosphericPressure*Math.pow(Math.E, secondPartSteamPressure*firstPartSteamPressure);
-        double evaporationRate = steamPressure*Math.sqrt(substance.getMolarMass())
-                *coefficients.getAirSpeedAndTemperatureCoefficient();
-        return evaporationRate;
+        double evaporationIntensity = steamPressure*Math.sqrt(substance.getMolarMass())
+                *coefficients.getAirSpeedAndTemperatureCoefficient()*Math.pow(10, -6);
+        double evaporationArea = (massCoef-immediateBoilingLiquidMass)/substance.getDensity();
+        return evaporationArea*evaporationIntensity*evaporationTime;
+    }
+
+    private void calculateProductConsumption(Substance substance, Equipment equipment, TmpClassForInputValues input){
+        double geomPressure = equipment.getHeight()*input.getFullnessPercent()-this.holeHeight;
+        double unitlessGeometricPressure = geomPressure + equipmentPressure/substance.getDensity() - atmosphericPressure/substance.getDensity();
+        this.productConsumption = coefficients.getFlowRateCoefficient()*(holeDiameter*1000)
+                *Math.sqrt(2*coefficients.getFreeFallAcceleration()*unitlessGeometricPressure);
     }
 }

@@ -21,6 +21,7 @@ public class Substance {
     private double density; //Плотность жидкости кг/м3
     private double specificEvaporationHeat; //Удельная теплота испарения сжиженного газа при температуре кипения жидкости
     private double molarMass; //Молярная масса
+    private double concentrationLimitMinimalValue; //Нижний концентрационный предел
 
     //TODO Нормально вставить декоратор от Hibernate
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

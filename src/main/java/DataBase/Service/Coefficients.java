@@ -31,4 +31,7 @@ public class Coefficients {
 
     //Относится к расчёту интенсивности испарения с поверхности испарения
     private double airSpeedAndTemperatureCoefficient=1;
+
+    //Относится к расчёту расхода жидкости при истечении из отверстия
+    private double flowRateCoefficient=0.67; //Взял из методички по гидродинамике
 }
