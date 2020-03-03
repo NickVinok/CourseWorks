@@ -34,4 +34,8 @@ public class Coefficients {
 
     //Относится к расчёту расхода жидкости при истечении из отверстия
     private double flowRateCoefficient=0.67; //Взял из методички по гидродинамике
+
+    //Относится ко времени экспозции в случае пожара пролива и факельного горения
+    private double humanFireDetectionTime = 5;
+    private double humanSpeedProceedingToSafeZone = 5;
 }

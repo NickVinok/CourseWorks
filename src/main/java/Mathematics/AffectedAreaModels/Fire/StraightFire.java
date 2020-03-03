@@ -4,18 +4,19 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
+import Mathematics.CalculationRequest;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class StraightFire implements BaseFireModel {
     private ArrayList<Double> thermalRadiationIntensity;
-
+    private ArrayList<Double> probitFunctionValue;
     private ArrayList<Double> irradianceAngleCoefficients;
+    private ArrayList<Double> expositionTime;
     @Autowired
     private Coefficients coefficients;
 
@@ -25,7 +26,7 @@ public class StraightFire implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
         //Его можно взять из документа, приведённого ниже
         //Но есть упрощённая версия
         //Она считается на этапе определения количества участвующего в аварии вещества
@@ -47,15 +48,15 @@ public class StraightFire implements BaseFireModel {
         //TODO Мб возможно брать из базы
         double specificMassBurnoutRate = 0.001*substance.getSpecificBurnoutRate()
                 /(substance.getSpecificEvaporationRate()+substance.getSpecificHeat()
-                *(substance.getBoilingTemperature()-amount.getCurrentTemperature()));
+                *(substance.getBoilingTemperature()-calculationRequest.getCurrentTemperature()));
 
         //Расчёт длины пламени
         double flameLength;
-        double coefficient = amount.getWindSpeed()
+        double coefficient = calculationRequest.getWindSpeed()
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                     /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(amount.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(calculationRequest.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {
@@ -79,24 +80,62 @@ public class StraightFire implements BaseFireModel {
             meanThermalRadiationIntensity = 1;
         }
 
-        ArrayList<Integer> distanceFromCenter = new ArrayList<>(List.of(1,2,3,4,5,10,15,20,30,40,50));
-        irradianceAngleCoefficientCalculation(effectiveDiameter,flameLength,flameAngleCos, distanceFromCenter);
+
+        irradianceAngleCoefficientCalculation(effectiveDiameter,flameLength,flameAngleCos, amount.getRadiusArray());
         ArrayList<Double> atmosphericTransmissionCoefficient = new ArrayList<>();
-        for(Integer dist: distanceFromCenter){
+        for(Double dist: amount.getRadiusArray()){
             double coef = Math.pow(Math.E, -7.0/10000*(dist-0.5*effectiveDiameter));
             atmosphericTransmissionCoefficient.add(coef);
         }
+
         for(int i = 0; i<atmosphericTransmissionCoefficient.size();i++){
-            thermalRadiationIntensity.add(atmosphericTransmissionCoefficient.get(i)*irradianceAngleCoefficients.get(i)*meanThermalRadiationIntensity);
+            double value = atmosphericTransmissionCoefficient.get(i)*irradianceAngleCoefficients.get(i)*meanThermalRadiationIntensity;
+            thermalRadiationIntensity.add(value);
         }
     }
+
+    @Override
+    public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
+        //Предположим, что говоря под зоной непосредственного воздействия пламени пожара
+        //подразумевается попапдание человека в зону эффективного диаметра пролива d
+        //Пока на это забиваем
+
+        //Находим с какого радиуса интенивность теплового излучения меньше 4 кВт
+        int indexOfSafeRadius = 0;
+        for(int i = 0; i<thermalRadiationIntensity.size();i++){
+            if(thermalRadiationIntensity.get(i) <= 4){
+                indexOfSafeRadius = i;
+                break;
+            }
+        }
+
+        //Считаем расстояние до этого радиуса
+        for(Double radius: radiusArray){
+            double time = 0;
+            double tmp = radius - radiusArray.get(indexOfSafeRadius);
+            if(tmp > 0){
+                time = coefficients.getHumanFireDetectionTime() + tmp/coefficients.getHumanSpeedProceedingToSafeZone();
+            } else {
+                time = coefficients.getHumanFireDetectionTime();
+            }
+            expositionTime.add(time);
+        }
+
+        probitFunctionValue = new ArrayList<>();
+        for(int i = 0; i<this.thermalRadiationIntensity.size();i++){
+            double value = -12.8 + 2.56*Math.log(expositionTime.get(i)*Math.pow(thermalRadiationIntensity.get(i), 1.33));
+            probitFunctionValue.add(value);
+        }
+        return probitFunctionValue;
+    }
+
     //Расчёт углового коэффициента облучённости
     private void irradianceAngleCoefficientCalculation(double effectiveDiameter, double flameLength, double flameAngleCos,
-                                                       ArrayList<Integer> distanceFromCenter){
+                                                       ArrayList<Double> distanceFromCenter){
         this.irradianceAngleCoefficients = new ArrayList<>();
         double a = 2*flameLength/effectiveDiameter;
         double angle = Math.acos(flameAngleCos);
-        for(Integer dist: distanceFromCenter){
+        for(Double dist: distanceFromCenter){
             double b = 2*dist/effectiveDiameter;
             double A = Math.sqrt(a*a+(b+1)*(b+1) - 2*a*(b+1)*Math.sin(angle));
             double B = Math.sqrt(a*a+(b-1)*(b-1) - 2*a*(b-1)*Math.sin(angle));

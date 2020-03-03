@@ -4,6 +4,7 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
+import Mathematics.CalculationRequest;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,10 @@ import java.util.List;
 @Data
 public class TorchFire implements BaseFireModel {
     private ArrayList<Double> thermalRadiationIntensity;
-
+    private ArrayList<Double> probitFunctionValue;
     private ArrayList<Double> irradianceAngleCoefficients;
+    private ArrayList<Double> expositionTime;
+
     @Autowired
     private Coefficients coefficients;
 
@@ -25,7 +28,7 @@ public class TorchFire implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
         //Расчёт длины и ширины факела
         double torchLength = coefficients.getTorchLengthCoefficient()*Math.pow(amount.getProductConsumption(), 0.4);
         double effectiveDiameter=0.15*torchLength;
@@ -34,15 +37,15 @@ public class TorchFire implements BaseFireModel {
         //TODO Мб возможно брать из базы
         double specificMassBurnoutRate = 0.001*substance.getSpecificBurnoutRate()
                 /(substance.getSpecificEvaporationRate()+substance.getSpecificHeat()
-                *(substance.getBoilingTemperature()-amount.getCurrentTemperature()));
+                *(substance.getBoilingTemperature()-calculationRequest.getCurrentTemperature()));
 
         //Расчёт длины пламени
         double flameLength;
-        double coefficient = amount.getWindSpeed()
+        double coefficient = calculationRequest.getWindSpeed()
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                 /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(amount.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(calculationRequest.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {
@@ -77,6 +80,37 @@ public class TorchFire implements BaseFireModel {
             thermalRadiationIntensity.add(atmosphericTransmissionCoefficient.get(i)*irradianceAngleCoefficients.get(i)*meanThermalRadiationIntensity);
         }
     }
+
+    @Override
+    public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
+        int indexOfSafeRadius = 0;
+        for(int i = 0; i<thermalRadiationIntensity.size();i++){
+            if(thermalRadiationIntensity.get(i) <= 4){
+                indexOfSafeRadius = i;
+                break;
+            }
+        }
+
+        //Считаем расстояние до этого радиуса
+        for(Double radius: radiusArray){
+            double time = 0;
+            double tmp = radius - radiusArray.get(indexOfSafeRadius);
+            if(tmp > 0){
+                time = coefficients.getHumanFireDetectionTime() + tmp/coefficients.getHumanSpeedProceedingToSafeZone();
+            } else {
+                time = coefficients.getHumanFireDetectionTime();
+            }
+            expositionTime.add(time);
+        }
+
+        probitFunctionValue = new ArrayList<>();
+        for(int i = 0; i<this.thermalRadiationIntensity.size();i++){
+            double value = -12.8 + 2.56*Math.log(expositionTime.get(i)*Math.pow(thermalRadiationIntensity.get(i), 1.33));
+            probitFunctionValue.add(value);
+        }
+        return probitFunctionValue;
+    }
+
     //Расчёт углового коэффициента облучённости
     private void irradianceAngleCoefficientCalculation(double effectiveDiameter, double flameLength, double flameAngleCos,
                                                        ArrayList<Integer> distanceFromCenter){

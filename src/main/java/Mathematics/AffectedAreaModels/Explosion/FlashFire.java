@@ -3,6 +3,7 @@ package Mathematics.AffectedAreaModels.Explosion;
 import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
+import Mathematics.CalculationRequest;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 
@@ -24,7 +25,7 @@ public class FlashFire implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
         //По-хорошему нужно поделить все вещества на горючие газы и легко воспламеняющиеся жидкости
         //Но так как это дополнительная морока и мы не работаем с гг, то оставляем формулу только под лвж
 
@@ -38,7 +39,7 @@ public class FlashFire implements BaseExplosionModel {
         probitFunctionValue = new ArrayList<>();
         for(Double radius: radiusArray){
             if(radius<=this.radius){
-                probitFunctionValue.add(1d);
+                probitFunctionValue.add(10d);
             }
             else {
                 probitFunctionValue.add(0d);

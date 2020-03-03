@@ -4,12 +4,12 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
+import Mathematics.CalculationRequest;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class OverHeatedReservoirExplosion implements BaseExplosionModel {
@@ -30,17 +30,15 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
 
         double explosionEfficientEnergy=coefficients.getPressureWaveEnergy()*substance.getSpecificHeat()*amount.getMass()
-                *(amount.getLiquidTemperature()-substance.getBoilingTemperature());
+                *(calculationRequest.getLiquidTemperature()-substance.getBoilingTemperature());
                 //Если есть предохранительное устройство, то температуру жижкости мы расчитываем по другой формуле
-        double P0 = 101458; //Атмосферное давление
-        ArrayList<Integer> distanceFromCenter = new ArrayList<>(List.of(1,2,3,4,5,10,15,20,30,40,50));
         double mpr = (explosionEfficientEnergy/4.52)/1000000;
 
-        for(Integer dist: distanceFromCenter){
-            double pressure = P0*(0.8*Math.pow(mpr,0.33)/dist
+        for(Double dist: amount.getRadiusArray()){
+            double pressure = calculationRequest.getAtmosphericPressure()*(0.8*Math.pow(mpr,0.33)/dist
                     + 3*Math.pow(mpr,0.66)/Math.pow(dist,2)
                     + 5*mpr/Math.pow(dist,3));
             double imp = 123*Math.pow(mpr,0.66)/dist;
@@ -51,6 +49,14 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
 
     @Override
     public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
-        return null;
+        probitFunctionValue = new ArrayList<>();
+
+        for(int i =0; i<impulse.size();i++){
+            double V = Math.pow(17500/excessPressure.get(i), 8.4) + Math.pow(290/impulse.get(i), 9.3);
+            double value = 5 - 0.26*Math.log(V);
+            probitFunctionValue.add(value);
+        }
+
+        return  probitFunctionValue;
     }
 }
