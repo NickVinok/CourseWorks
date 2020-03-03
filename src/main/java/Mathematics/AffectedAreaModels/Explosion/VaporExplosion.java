@@ -4,14 +4,17 @@ import DataBase.Model.*;
 import DataBase.Repo.CloudCombustionModeRepo;
 import DataBase.Service.Coefficients;
 import Mathematics.MatterAmountCalculation.Amount;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class VaporExplosion implements BaseExplosionModel {
     private ArrayList<Double> excessPressure;
     private ArrayList<Double> impulse;
+    private ArrayList<Double> probitFunctionValue;
 
     @Autowired
     private Coefficients coefficients;
@@ -72,5 +75,10 @@ public class VaporExplosion implements BaseExplosionModel {
             this.excessPressure.add(pressure);
             this.impulse.add(unitImpulse);
         }
+    }
+
+    @Override
+    public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
+        return null;
     }
 }

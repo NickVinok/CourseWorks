@@ -9,6 +9,9 @@ import Mathematics.TmpClassForInputValues;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
 @Data
 public class Amount {
     @Autowired
@@ -19,6 +22,7 @@ public class Amount {
     private double volume;
     private double productConsumption;
     private double evaporationTime=3600; //Ебануть в константы потом мб
+    private ArrayList<Double> radiusArray;
 
     //TODO БРАТЬ НЕ ОТСЮДА, А ИЗ ПРИХОДЯЩЕГО ЗАПРОСА
     private double liquidTemperature;
@@ -33,6 +37,8 @@ public class Amount {
 
 
     public void calculate(Equipment equipment, Department dep, Substance substance, TmpClassForInputValues input){
+        this.radiusArray = generateRadiusArray();
+
         double massCoefficient = input.getFullnessPercent()*equipment.getVolume()*substance.getDensity();
         double quantityIB = this.quantityOfImmediatelyBoilingLiquidCalculation(massCoefficient, substance);
         double quantityLV = quantityOfLiquidInVaporFormCalculation(input.getFullnessPercent(), substance, equipment);
@@ -86,5 +92,13 @@ public class Amount {
         double unitlessGeometricPressure = geomPressure + equipmentPressure/substance.getDensity() - atmosphericPressure/substance.getDensity();
         this.productConsumption = coefficients.getFlowRateCoefficient()*(holeDiameter*1000)
                 *Math.sqrt(2*coefficients.getFreeFallAcceleration()*unitlessGeometricPressure);
+    }
+
+    private ArrayList<Double> generateRadiusArray(){
+        ArrayList<Double> tmp = new ArrayList<>();
+        for(double d = 0; d<2000; d++){
+            tmp.add(d);
+        }
+        return tmp;
     }
 }

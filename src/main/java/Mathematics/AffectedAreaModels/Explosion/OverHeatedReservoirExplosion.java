@@ -15,6 +15,7 @@ import java.util.List;
 public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     private ArrayList<Double> excessPressure;
     private ArrayList<Double> impulse;
+    private ArrayList<Double> probitFunctionValue;
     @Autowired
     private Coefficients coefficients;
 
@@ -46,5 +47,10 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
             excessPressure.add(pressure);
             impulse.add(imp);
         }
+    }
+
+    @Override
+    public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
+        return null;
     }
 }

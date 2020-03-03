@@ -12,8 +12,7 @@ public class RiskCalculation {
     private Float avgIndividualRisk = 0f;
     private Float collectiveRisk = 0f;
 
-    @Autowired
-    private DeathProbability deathProbability;
+
 
     //
     //Второй аргумент - услованя вероятность реализации механизма воздействия(второй массив) при реализации аварии в точке (X,Y)(3 и 4 массивы)

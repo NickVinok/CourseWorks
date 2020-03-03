@@ -9,5 +9,5 @@ import java.util.ArrayList;
 
 public interface BaseModel {
     void calculate(Substance substance, Amount amount, Department department, Enterprise  enterprise);
-    ArrayList<Double> getProbitFunctionValues();
+    ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray);
 }

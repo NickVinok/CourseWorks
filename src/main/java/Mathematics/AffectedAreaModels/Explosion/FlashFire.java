@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Data
 public class FlashFire implements BaseExplosionModel {
     private ArrayList<Double> probitFunctionValue;
-    private double rNKPR;
+    private double radius;
 
     @Override
     public ArrayList<Double> getExcessPressure() {
@@ -29,11 +29,22 @@ public class FlashFire implements BaseExplosionModel {
         //Но так как это дополнительная морока и мы не работаем с гг, то оставляем формулу только под лвж
 
         //Как я понял масса в amount - масса паров вещества, так что спокойно используем её
-        this.rNKPR = 7.8 * Math.pow(amount.getMass()/(substance.getFuelVapourDensity()*substance.getConcentrationLimitMinimalValue()),0.33);
+        double rNKPR = 7.8 * Math.pow(amount.getMass()/(substance.getFuelVapourDensity()*substance.getConcentrationLimitMinimalValue()),0.33);
+        this.radius = 1.2 * rNKPR;
     }
 
     @Override
-    public ArrayList<Double> getProbitFunctionValues() {
-        return null;
+    public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
+        probitFunctionValue = new ArrayList<>();
+        for(Double radius: radiusArray){
+            if(radius<=this.radius){
+                probitFunctionValue.add(1d);
+            }
+            else {
+                probitFunctionValue.add(0d);
+            }
+        }
+
+        return probitFunctionValue;
     }
 }
