@@ -9,11 +9,13 @@ import javax.persistence.*;
 public class CloudCombustionMode {
     @EmbeddedId
     private CloudCombustionModeKey cloudCombustionModeKey;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("clutterClassId")
     @JoinColumn(name = "clutterClassId")
     private ClutterClass clutterClass;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("explosionSensitivityClassId")
     @JoinColumn(name = "explosionSensitivityClassId")
     private ExplosionSensitivityClass explosionSensitivityClass;
