@@ -1,4 +1,4 @@
-package Mathematics;
+package Mathematics.RiskCalculationModule;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
