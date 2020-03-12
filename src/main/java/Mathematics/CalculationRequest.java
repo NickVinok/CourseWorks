@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class CalculationRequest {
-    //TODO БРАТЬ НЕ ОТСЮДА, А ИЗ ПРИХОДЯЩЕГО ЗАПРОСА
     private double liquidTemperature;
     private double currentTemperature;
     private double fullnessPercent;

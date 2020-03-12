@@ -20,4 +20,6 @@ public class User {
     @JoinColumn(name = "roleId")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private Role role;
+
+    //TODO СВЯЗАТЬ С ПРЕДПРИЯТИЕМ
 }
