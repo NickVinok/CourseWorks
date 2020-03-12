@@ -1,6 +1,7 @@
 package Mathematics.AffectedAreaModels.Explosion;
 
 import DataBase.Model.*;
+import DataBase.Model.Keys.CloudCombustionModeKey;
 import DataBase.Repo.CloudCombustionModeRepo;
 import DataBase.Service.Coefficients;
 import Mathematics.CalculationRequest;

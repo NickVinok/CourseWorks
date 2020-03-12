@@ -1,15 +1,16 @@
-package DataBase.Model;
+package DataBase.Model.Keys;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Data
 @Embeddable
 @NoArgsConstructor
-public class SubstanceInEquipmentKey {
+public class SubstanceInEquipmentKey implements Serializable {
     @Column(name = "substanceId")
     private long substanceId;
     @Column(name = "equipmentId")
@@ -20,5 +21,4 @@ public class SubstanceInEquipmentKey {
         this.equipmentId = equipmentId;
     }
 
-    //Стандартные параметры
 }

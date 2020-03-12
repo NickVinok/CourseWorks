@@ -1,5 +1,6 @@
 package DataBase.Model;
 
+import DataBase.Model.Keys.SubstanceInEquipmentKey;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,6 +18,8 @@ public class SubstanceInEquipment {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("substanceId")
     @JoinColumn(name = "substanceId")
+
     private Substance substance;
 
+    //Стандартные параметры
 }

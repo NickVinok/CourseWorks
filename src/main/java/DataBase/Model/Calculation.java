@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-public class Caclculation {
+public class Calculation {
     @Id
     private long id;
 

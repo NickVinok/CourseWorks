@@ -1,6 +1,8 @@
 package DataBase.Model;
 
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -16,5 +18,6 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("roleId")
     @JoinColumn(name = "roleId")
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Role role;
 }

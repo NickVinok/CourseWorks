@@ -14,12 +14,12 @@ public class Department {
     private double square;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "clutterClassId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private ClutterClass clutterClass;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "enterpriseId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Enterprise enterprise;
 
 }

@@ -22,14 +22,14 @@ public class Substance {
     private double molarMass; //Молярная масса
     private double concentrationLimitMinimalValue; //Нижний концентрационный предел
 
-    //TODO Нормально вставить декоратор от Hibernate
+    //TODO Нормально вставить декоратор от Hibernate и разобраться с OnDelete (Сделать двусторонюю связь)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "explosionSensitivityId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private ExplosionSensitivityClass explosionSensitivityClass;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "substanceTypeId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private SubstanceType substanceType;
 }

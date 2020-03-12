@@ -1,5 +1,6 @@
 package DataBase.Model;
 
+import DataBase.Model.Keys.CloudCombustionModeKey;
 import lombok.Data;
 
 import javax.persistence.*;

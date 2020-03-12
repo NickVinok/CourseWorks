@@ -1,7 +1,7 @@
 package DataBase.Repo;
 
 import DataBase.Model.CloudCombustionMode;
-import DataBase.Model.CloudCombustionModeKey;
+import DataBase.Model.Keys.CloudCombustionModeKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
