@@ -11,5 +11,4 @@ public class Event {
     @Id
     private long id;
     private String name;
-    private String description;
 }

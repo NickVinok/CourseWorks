@@ -44,7 +44,7 @@ public class VaporExplosion implements BaseExplosionModel {
         double Vr = 0; //Скорость фронта пламени
 
         CloudCombustionModeKey key = new CloudCombustionModeKey(department.getClutterClass().getId(),
-                substance.getExplosionSensitivityClass().getId());
+                substance.getExplosionSensitivity().getId());
         CloudCombustionMode ccm = cloudCombustionModeRepo.finByCloudCombustionKey(key);
 
         if(ccm.getFlameFrontSpeed()==0){

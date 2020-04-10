@@ -14,6 +14,8 @@ public class User {
 
     private String name;
     private String surname;
+    private String login;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("roleId")

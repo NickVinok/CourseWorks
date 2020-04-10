@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class DamagingFactorType {
+public class Emergency {
     @Id
     private long id;
     private String name;

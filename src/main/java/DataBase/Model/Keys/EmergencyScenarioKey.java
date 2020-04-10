@@ -10,13 +10,13 @@ import java.io.Serializable;
 @Data
 @Embeddable
 @NoArgsConstructor
-public class DamagingFactorInAccidentKey implements Serializable {
+public class EmergencyScenarioKey implements Serializable {
         @Column(name = "damagingFactorId")
         private long damagingFactor;
         @Column(name = "accidentId")
         private long accident;
 
-        public DamagingFactorInAccidentKey(long damagingFactor, long accident){
+        public EmergencyScenarioKey(long damagingFactor, long accident){
             this.accident = accident;
             this.damagingFactor = damagingFactor;
         }

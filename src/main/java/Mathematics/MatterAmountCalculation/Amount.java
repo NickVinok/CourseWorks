@@ -2,7 +2,7 @@ package Mathematics.MatterAmountCalculation;
 
 
 import DataBase.Model.Department;
-import DataBase.Model.Equipment;
+import DataBase.Model.EquipmentClass;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
 import Mathematics.CalculationRequest;
@@ -24,17 +24,17 @@ public class Amount {
     private ArrayList<Double> radiusArray;
 
 
-    public void calculate(Equipment equipment, Department dep, Substance substance, CalculationRequest input){
+    public void calculate(EquipmentClass equipmentClass, Department dep, Substance substance, CalculationRequest input){
         this.radiusArray = generateRadiusArray();
 
-        double massCoefficient = input.getFullnessPercent()*equipment.getVolume()*substance.getDensity();
+        double massCoefficient = input.getFullnessPercent()* equipmentClass.getVolume()*substance.getDensity();
         double quantityIB = this.quantityOfImmediatelyBoilingLiquidCalculation(massCoefficient, substance, input);
-        double quantityLV = quantityOfLiquidInVaporFormCalculation(input.getFullnessPercent(), substance, equipment, input);
+        double quantityLV = quantityOfLiquidInVaporFormCalculation(input.getFullnessPercent(), substance, equipmentClass, input);
         double quantityLS = quantityOfLiquidSteamEvaporatingFromCane(substance, dep, input);
         double quantityML = quantityOfMirrorLiquidEvaporating(substance, massCoefficient, quantityIB, input);
         this.mass = quantityIB+quantityLV+quantityLS+quantityML;
 
-        calculateProductConsumption(substance, equipment, input);
+        calculateProductConsumption(substance, equipmentClass, input);
     }
 
     private double quantityOfImmediatelyBoilingLiquidCalculation(double massCoefficient, Substance substance, CalculationRequest input){
@@ -46,9 +46,9 @@ public class Amount {
         return massCoefficient*(1-Math.pow(Math.E, expVal));
     }
 
-    private double quantityOfLiquidInVaporFormCalculation(double fullnessPercent, Substance substance, Equipment equipment, CalculationRequest input){
+    private double quantityOfLiquidInVaporFormCalculation(double fullnessPercent, Substance substance, EquipmentClass equipmentClass, CalculationRequest input){
         double firstPart = (1-fullnessPercent)*substance.getMolarMass()/coefficients.getUniversalGasConst();
-        double secondPart = input.getEquipmentPressure()*equipment.getVolume()*(273+input.getLiquidTemperature()); //TODO температура в оборудовании==температура жидкости в оборудовании
+        double secondPart = input.getEquipmentPressure()* equipmentClass.getVolume()*(273+input.getLiquidTemperature()); //TODO температура в оборудовании==температура жидкости в оборудовании
         return firstPart*secondPart;
     }
 
@@ -60,7 +60,7 @@ public class Amount {
                 *substance.getSpecificEvaporationHeat()*substance.getDensity());
         double firstPart = 2*(input.getCurrentTemperature()-substance.getBoilingTemperature())
                 /substance.getSpecificEvaporationHeat();
-        double secondPart =  heatTransitionCoefficient/Math.sqrt(Math.PI)*dep.getSquare()*Math.sqrt(time);
+        double secondPart =  heatTransitionCoefficient/Math.sqrt(Math.PI)*dep.getArea()*Math.sqrt(time);
         return firstPart*secondPart;
     }
 
@@ -75,8 +75,8 @@ public class Amount {
         return evaporationArea*evaporationIntensity*evaporationTime;
     }
 
-    private void calculateProductConsumption(Substance substance, Equipment equipment, CalculationRequest input){
-        double geomPressure = equipment.getHeight()*input.getFullnessPercent()-input.getHoleHeight();
+    private void calculateProductConsumption(Substance substance, EquipmentClass equipmentClass, CalculationRequest input){
+        double geomPressure = equipmentClass.getHeight()*input.getFullnessPercent()-input.getHoleHeight();
         double unitlessGeometricPressure = geomPressure + input.getEquipmentPressure()/substance.getDensity()
                 - input.getAtmosphericPressure()/substance.getDensity();
         this.productConsumption = coefficients.getFlowRateCoefficient()*(input.getHoleDiameter()*1000)

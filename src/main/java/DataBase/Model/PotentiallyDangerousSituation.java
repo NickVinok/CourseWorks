@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class Accident {
+public class PotentiallyDangerousSituation {
     @Id
     private long id;
 

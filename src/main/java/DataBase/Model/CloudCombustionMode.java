@@ -19,8 +19,7 @@ public class CloudCombustionMode {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("explosionSensitivityClassId")
     @JoinColumn(name = "explosionSensitivityClassId")
-    private ExplosionSensitivityClass explosionSensitivityClass;
-    //TODO Имеет ли смысл выделить в отдельный класс
+    private ExplosionSensitivity explosionSensitivity;
     private String combustionType;
     //Скорость фронта пламени
     private double flameFrontSpeed;

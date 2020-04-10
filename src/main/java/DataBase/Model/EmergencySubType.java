@@ -6,15 +6,14 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class DamagingFactor {
+public class EmergencySubType {
     @Id
     private long id;
 
     private String name;
-    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("damagingFactorId")
-    @JoinColumn(name = "damagingFactorId")
-    private DamagingFactorType damagingFactorType;
+    @MapsId("emergencyId")
+    @JoinColumn(name = "emergencyId")
+    private Emergency emergency;
 }

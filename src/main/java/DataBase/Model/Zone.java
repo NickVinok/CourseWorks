@@ -5,11 +5,10 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 @Data
-public class Enterprise {
+@Entity
+public class Zone {
     @Id
     private long id;
-
-    private double area;
+    private String name;
 }

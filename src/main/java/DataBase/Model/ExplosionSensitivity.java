@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 @Data
 @Entity
-public class ExplosionSensitivityClass {
+public class ExplosionSensitivity {
     private long id;
     private int classificationNumber;
 }

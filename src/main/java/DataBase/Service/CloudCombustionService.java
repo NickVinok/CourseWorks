@@ -13,11 +13,9 @@ public class CloudCombustionService {
     @Autowired
     private CloudCombustionModeRepo cloudCombustionModeRepo;
 
-    private CloudCombustionMode combustionMode;
-
     public CloudCombustionMode getFlameFrontSpeed(Substance substance, Department department){
         CloudCombustionModeKey key = new CloudCombustionModeKey(department.getClutterClass().getId(),
-                substance.getExplosionSensitivityClass().getId());
+                substance.getExplosionSensitivity().getId());
         return cloudCombustionModeRepo.finByCloudCombustionKey(key);
     }
 }

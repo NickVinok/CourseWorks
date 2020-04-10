@@ -1,9 +1,9 @@
 package DataBase.Repo;
 
-import DataBase.Model.Accident;
+import DataBase.Model.Enterprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccidentRepo extends JpaRepository<Accident, Long> {
+public interface EnterpriseRepo extends JpaRepository<Enterprise, Long> {
 }

@@ -15,10 +15,13 @@ public class EquipmentInDepartmentKey implements Serializable {
     private long equipmentId;
     @Column(name = "departmentId")
     private long departmentId;
+    @Column(name = "substanceId")
+    private  long substanceId;
 
-    public EquipmentInDepartmentKey(long equipmentId, long departmentId){
+    public EquipmentInDepartmentKey(long equipmentId, long departmentId ,long substanceId){
         this.equipmentId = equipmentId;
         this.departmentId = departmentId;
+        this.substanceId = substanceId;
     }
 }
 

@@ -7,14 +7,14 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class DamagingExposureCalculation {
+public class EmergencySubTypeDamageCalculation {
     @EmbeddedId
     private DamagingExposureCalculationKey damagingExposureCalculationKey;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("damagingFactorId")
     @JoinColumn(name = "damagingFactorId")
-    private DamagingFactor damagingFactor;
+    private EmergencySubType emergencySubType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("calculationId")
@@ -27,6 +27,7 @@ public class DamagingExposureCalculation {
     private ExposureType exposureType;
 
     private double probitFunctionValue;
-    private double exposureProbability;
+    private double probability;
     private double value;
+    private double potentialRisk;
 }

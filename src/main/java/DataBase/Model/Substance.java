@@ -1,8 +1,6 @@
 package DataBase.Model;
 
 import lombok.Data;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -11,6 +9,7 @@ import javax.persistence.*;
 public class Substance {
     @Id
     private long id;
+    private String name;
     private double specificHeat; //удельная теплоёмкость
     private double beta; //корректировачный параметр для расчёта режима сгорания облака
     private double boilingTemperature; //Температура кипения при нормальном атмосферном давлении
@@ -26,7 +25,7 @@ public class Substance {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "explosionSensitivityId", nullable = false)
     //@OnDelete(action = OnDeleteAction.CASCADE)
-    private ExplosionSensitivityClass explosionSensitivityClass;
+    private ExplosionSensitivity explosionSensitivity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "substanceTypeId", nullable = false)

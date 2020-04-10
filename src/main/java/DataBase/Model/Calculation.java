@@ -3,6 +3,7 @@ package DataBase.Model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -17,5 +18,6 @@ public class Calculation {
     private User user;
 
     private Timestamp time;
-    //Возможно ещё входные данные
+    private double collectiveRisk;
+    private double matterConsumption;
 }

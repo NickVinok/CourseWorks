@@ -12,4 +12,6 @@ public class ExposureType {
     private long id;
     private String name;
     private String measurementUnit;
+
+
 }
