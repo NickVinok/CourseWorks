@@ -1,8 +1,6 @@
 package Controllers;
 
-import Controllers.PesponseObjects.LoginResponses.LoginBasicResponse;
-import Controllers.PesponseObjects.LoginResponses.LoginErrorResponse;
-import Controllers.PesponseObjects.LoginResponses.LoginResearcherResponse;
+import Controllers.PesponseObjects.LoginResponses.*;
 import Controllers.RequsetObjects.LoginRequest;
 import Logics.LoginLogic;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +30,29 @@ public class LoginController {
             incorrectPasswordResponse.setLoginResponse(this.loginLogic.getLoginResponse());
             incorrectPasswordResponse.setMessage("Неверный пароль");
             response = incorrectPasswordResponse;
-        } else if(this.loginLogic.getLoginResponse().isResearcher()){
+        }
+        else if(this.loginLogic.getLoginResponse().isResearcher()) {
             LoginResearcherResponse researcherResponse = new LoginResearcherResponse();
             researcherResponse.setLoginResponse(this.loginLogic.getLoginResponse());
             researcherResponse.setInitialDataForCalculation(this.loginLogic.getUserFormData());
             response = researcherResponse;
-        } else {
+        }
+        else if(this.loginLogic.getLoginResponse().isEnterpriseAdmin()) {
+            LoginEnterpriseAdminResponse loginEnterpriseAdminResponse = new LoginEnterpriseAdminResponse();
+            loginEnterpriseAdminResponse.setLoginResponse(this.loginLogic.getLoginResponse());
+            response = loginEnterpriseAdminResponse;
+        }
+        else if(this.loginLogic.getLoginResponse().isHeadResearcher()) {
+            LoginHeadResearcherResponse loginHeadResearcherResponse = new LoginHeadResearcherResponse();
+            loginHeadResearcherResponse.setLoginResponse(this.loginLogic.getLoginResponse());
+            response = loginHeadResearcherResponse;
+        }
+        else if(this.loginLogic.getLoginResponse().isSecurityManager()){
+            LoginSecurityManagerResponse loginSecurityManagerResponse = new LoginSecurityManagerResponse();
+            loginSecurityManagerResponse.setLoginResponse(this.loginLogic.getLoginResponse());
+            response = loginSecurityManagerResponse;
+        }
+        else {
             response = new LoginErrorResponse();
         }
 

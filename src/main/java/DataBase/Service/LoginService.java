@@ -24,20 +24,35 @@ public class LoginService {
         }
         //Если такой пользователь существует
         else {
+            response.setPresent(true);
             //Если пароль соответсвует логину
             if (user.get().getPassword().equals(password)){
                 response.setPasswordCorrect(true);
                 //Если роль пользователя - админ
-                if(user.get().getRole().getName().equals("admin")){
-                    response.setPresent(true);
-                    response.setAdmin(true);
+                if(user.get().getRole().getName().equals("enterpriseAdmin")){
+                    response.setEnterpriseAdmin(true);
                     response.setResearcher(false);
+                    response.setHeadResearcher(false);
+                    response.setSecurityManager(false);
                 }
                 //Если роль пользователя - исседователь
                 else if(user.get().getRole().getName().equals("researcher")){
-                    response.setPresent(true);
-                    response.setAdmin(false);
+                    response.setEnterpriseAdmin(false);
                     response.setResearcher(true);
+                    response.setHeadResearcher(false);
+                    response.setSecurityManager(false);
+                }
+                else if(user.get().getRole().getName().equals("headResearcher")){
+                    response.setEnterpriseAdmin(false);
+                    response.setResearcher(false);
+                    response.setHeadResearcher(true);
+                    response.setSecurityManager(false);
+                }
+                else if(user.get().getRole().getName().equals("securityManager")){
+                    response.setEnterpriseAdmin(false);
+                    response.setResearcher(false);
+                    response.setHeadResearcher(false);
+                    response.setSecurityManager(true);
                 }
             }
             //Если пароль неверен

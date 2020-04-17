@@ -7,5 +7,7 @@ public class LoginResponse {
     private boolean isPresent;
     private boolean isPasswordCorrect;
     private boolean isResearcher;
-    private boolean isAdmin;
+    private boolean isEnterpriseAdmin;
+    private boolean isHeadResearcher;
+    private boolean isSecurityManager;
 }

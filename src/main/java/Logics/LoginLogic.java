@@ -28,9 +28,20 @@ public class LoginLogic {
 
         if(this.loginResponse.isPasswordCorrect()
                 && this.loginResponse.isPresent()) {
-            this.userFormData = userFormInitialDataService.getDataForCalculation();
+            if(this.loginResponse.isResearcher()){
+                this.userFormData = userFormInitialDataService.getDataForCalculation();
+            }
+            else if(this.loginResponse.isSecurityManager()){
+                //отсутствует логика под безопасника
+            }
+            else if(this.loginResponse.isHeadResearcher()){
+                //отсутствует логика под главного исследователя
+            }
+            else if(this.loginResponse.isEnterpriseAdmin()){
+                //отсутствует логика под администратора предприятия
+            }
         } else{
-            //TODO сделаю, когда реализую логику администратора
+
         }
     }
 }

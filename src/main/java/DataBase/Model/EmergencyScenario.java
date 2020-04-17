@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class EmergencyScenario {
     @EmbeddedId
     private EmergencyScenarioKey emergencyScenarioKey;
-
+    //TODO РАЗДЕЛИТЬ ЭТОТ КЛАСС, ТАК КАК КОНЕЧНЫЕ ТОЧКИ ДЕРЕВА И ТЕ, ЧТО В СЕРЕДИНЕ ОЗНАЧАЮТ, ЧТО EMERGENCYSUBTYPE МОЖЕТ БЫТЬ НУЛЕВЫМ
     private double probability;
     private boolean isEnd;
     private String description;
