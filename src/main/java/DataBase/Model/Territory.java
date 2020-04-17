@@ -8,8 +8,9 @@ import javax.persistence.*;
 @Entity
 public class Territory {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
-    private double distanceFromEnterprise;
+    private double distanceFromPreviousTerritory;
     private double populationDensity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

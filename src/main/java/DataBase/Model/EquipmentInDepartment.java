@@ -1,6 +1,5 @@
 package DataBase.Model;
 
-import DataBase.Model.Keys.EquipmentInDepartmentKey;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,8 +8,8 @@ import java.sql.Timestamp;
 @Data
 @Entity
 public class EquipmentInDepartment {
-    @EmbeddedId
-    EquipmentInDepartmentKey equipmentInDepartmentKey;
+    @Id
+    private long id;
 
     private double fullnessPercent;
     private Timestamp storageStartDate;

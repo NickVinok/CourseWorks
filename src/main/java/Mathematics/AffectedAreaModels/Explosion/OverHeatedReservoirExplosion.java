@@ -4,7 +4,7 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,8 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     private ArrayList<Double> excessPressure;
     private ArrayList<Double> impulse;
     private ArrayList<Double> probitFunctionValue;
+    private String type;
+
     @Autowired
     private Coefficients coefficients;
 
@@ -30,15 +32,15 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
 
         double explosionEfficientEnergy=coefficients.getPressureWaveEnergy()*substance.getSpecificHeat()*amount.getMass()
-                *(calculationRequest.getLiquidTemperature()-substance.getBoilingTemperature());
+                *(calculationVariableParameters.getLiquidTemperature()-substance.getBoilingTemperature());
                 //Если есть предохранительное устройство, то температуру жижкости мы расчитываем по другой формуле
         double mpr = (explosionEfficientEnergy/4.52)/1000000;
 
         for(Double dist: amount.getRadiusArray()){
-            double pressure = calculationRequest.getAtmosphericPressure()*(0.8*Math.pow(mpr,0.33)/dist
+            double pressure = calculationVariableParameters.getAtmosphericPressure()*(0.8*Math.pow(mpr,0.33)/dist
                     + 3*Math.pow(mpr,0.66)/Math.pow(dist,2)
                     + 5*mpr/Math.pow(dist,3));
             double imp = 123*Math.pow(mpr,0.66)/dist;
@@ -58,5 +60,9 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
         }
 
         return  probitFunctionValue;
+    }
+
+    public OverHeatedReservoirExplosion(){
+        this.type="Взрыв";
     }
 }

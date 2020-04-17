@@ -12,8 +12,8 @@ public class EmergencySubTypeDamageCalculation {
     private DamagingExposureCalculationKey damagingExposureCalculationKey;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("damagingFactorId")
-    @JoinColumn(name = "damagingFactorId")
+    @MapsId("emergencySubTypeId")
+    @JoinColumn(name = "emergencySubTypeId")
     private EmergencySubType emergencySubType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

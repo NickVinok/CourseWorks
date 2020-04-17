@@ -4,7 +4,7 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,8 @@ public class StraightFire implements BaseFireModel {
     private ArrayList<Double> probitFunctionValue;
     private ArrayList<Double> irradianceAngleCoefficients;
     private ArrayList<Double> expositionTime;
+    private String type;
+
     @Autowired
     private Coefficients coefficients;
 
@@ -26,7 +28,7 @@ public class StraightFire implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
         //Его можно взять из документа, приведённого ниже
         //Но есть упрощённая версия
         //Она считается на этапе определения количества участвующего в аварии вещества
@@ -36,11 +38,11 @@ public class StraightFire implements BaseFireModel {
 
         //Для вычисления эффективного диаметра пролива
         double straitPane;
-        if (enterprise.getCavingArea()!=0){
+        if (enterprise.getArea()!=0){
             //TODO брать коэффициент, в зависимости от типа поверхности, на которую идёт пролив
             straitPane=amount.getVolume()*coefficients.getStraitConcreteCoefficient();
         } else{
-            straitPane=enterprise.getCavingArea();
+            straitPane=enterprise.getArea();
         }
         double effectiveDiameter=Math.sqrt(4*straitPane/Math.PI);
 
@@ -48,15 +50,15 @@ public class StraightFire implements BaseFireModel {
         //TODO Мб возможно брать из базы
         double specificMassBurnoutRate = 0.001*substance.getSpecificBurnoutRate()
                 /(substance.getSpecificEvaporationRate()+substance.getSpecificHeat()
-                *(substance.getBoilingTemperature()-calculationRequest.getCurrentTemperature()));
+                *(substance.getBoilingTemperature()- calculationVariableParameters.getCurrentTemperature()));
 
         //Расчёт длины пламени
         double flameLength;
-        double coefficient = calculationRequest.getWindSpeed()
+        double coefficient = calculationVariableParameters.getWindSpeed()
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                     /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(calculationRequest.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(calculationVariableParameters.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {
@@ -155,5 +157,9 @@ public class StraightFire implements BaseFireModel {
                     Math.sqrt(verticalIrradiance*verticalIrradiance+horizontalIrradiance*horizontalIrradiance)
             );
         }
+    }
+
+    public StraightFire(){
+        this.type="Пожар";
     }
 }

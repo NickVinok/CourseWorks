@@ -4,7 +4,7 @@ import DataBase.Model.*;
 import DataBase.Model.Keys.CloudCombustionModeKey;
 import DataBase.Repo.CloudCombustionModeRepo;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ public class VaporExplosion implements BaseExplosionModel {
     private ArrayList<Double> excessPressure;
     private ArrayList<Double> impulse;
     private ArrayList<Double> probitFunctionValue;
+    private String type;
 
     @Autowired
     private Coefficients coefficients;
@@ -33,7 +34,7 @@ public class VaporExplosion implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
         //Считаем эффективный энергозапас горючей смеси
         double E = amount.getMass() //масса горючего вещества, участвующего в облаке
                 *coefficients.getSubstanceParticipationInExplosion() //коэффициент участия гор.вещ. во взрыве
@@ -57,7 +58,7 @@ public class VaporExplosion implements BaseExplosionModel {
         
         for(Double dist: amount.getRadiusArray()){
             unitlessDistance.add(dist/
-                    (Math.pow(E/calculationRequest.getAtmosphericPressure(), 0.33)));
+                    (Math.pow(E/ calculationVariableParameters.getAtmosphericPressure(), 0.33)));
         }
 
         for(Double dist : unitlessDistance){
@@ -68,8 +69,8 @@ public class VaporExplosion implements BaseExplosionModel {
                     *(1-0.4*(coefficients.getCombustionProductExpansionDegree()-1)*Vr/(coefficients.getCombustionProductExpansionDegree()*C0))
                     *(0.06/dist + 0.01/Math.pow(dist,2) + 0.0025/Math.pow(dist,3));
 
-            double pressure=unitlessPressure*calculationRequest.getAtmosphericPressure();
-            double unitImpulse=unitlessImpulse*Math.pow(calculationRequest.getAtmosphericPressure(),2/3f)*Math.pow(E,1/3f)/C0;
+            double pressure=unitlessPressure* calculationVariableParameters.getAtmosphericPressure();
+            double unitImpulse=unitlessImpulse*Math.pow(calculationVariableParameters.getAtmosphericPressure(),2/3f)*Math.pow(E,1/3f)/C0;
 
             this.excessPressure.add(pressure);
             this.impulse.add(unitImpulse);
@@ -87,5 +88,9 @@ public class VaporExplosion implements BaseExplosionModel {
         }
 
         return  probitFunctionValue;
+    }
+
+    public VaporExplosion(){
+        this.type="Взрыв";
     }
 }

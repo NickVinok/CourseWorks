@@ -8,8 +8,10 @@ import javax.persistence.*;
 @Entity
 public class Substance {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String type;
     private double specificHeat; //удельная теплоёмкость
     private double beta; //корректировачный параметр для расчёта режима сгорания облака
     private double boilingTemperature; //Температура кипения при нормальном атмосферном давлении

@@ -1,9 +1,9 @@
-package Mathematics;
+package Utils;
 
 import lombok.Data;
 
 @Data
-public class CalculationRequest {
+public class CalculationVariableParameters {
     private double liquidTemperature;
     private double currentTemperature;
     private double fullnessPercent;
@@ -13,4 +13,5 @@ public class CalculationRequest {
     private double equipmentPressure;
     private double holeHeight;
     private double holeDiameter;
+    private double numberOfWorkers;
 }

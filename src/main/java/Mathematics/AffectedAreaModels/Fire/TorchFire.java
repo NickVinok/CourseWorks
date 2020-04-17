@@ -4,7 +4,7 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,8 @@ public class TorchFire implements BaseFireModel {
     private ArrayList<Double> probitFunctionValue;
     private ArrayList<Double> irradianceAngleCoefficients;
     private ArrayList<Double> expositionTime;
+    private String type;
+
 
     @Autowired
     private Coefficients coefficients;
@@ -28,7 +30,7 @@ public class TorchFire implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
         //Расчёт длины и ширины факела
         double torchLength = coefficients.getTorchLengthCoefficient()*Math.pow(amount.getProductConsumption(), 0.4);
         double effectiveDiameter=0.15*torchLength;
@@ -37,15 +39,15 @@ public class TorchFire implements BaseFireModel {
         //TODO Мб возможно брать из базы
         double specificMassBurnoutRate = 0.001*substance.getSpecificBurnoutRate()
                 /(substance.getSpecificEvaporationRate()+substance.getSpecificHeat()
-                *(substance.getBoilingTemperature()-calculationRequest.getCurrentTemperature()));
+                *(substance.getBoilingTemperature()- calculationVariableParameters.getCurrentTemperature()));
 
         //Расчёт длины пламени
         double flameLength;
-        double coefficient = calculationRequest.getWindSpeed()
+        double coefficient = calculationVariableParameters.getWindSpeed()
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                 /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(calculationRequest.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(calculationVariableParameters.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {
@@ -137,5 +139,9 @@ public class TorchFire implements BaseFireModel {
                     Math.sqrt(verticalIrradiance*verticalIrradiance+horizontalIrradiance*horizontalIrradiance)
             );
         }
+    }
+
+    public TorchFire(){
+        this.type="Пожар";
     }
 }

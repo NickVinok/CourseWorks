@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Data
 public class EquipmentClass {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private String mark; //марка оборудования
     private double volume;

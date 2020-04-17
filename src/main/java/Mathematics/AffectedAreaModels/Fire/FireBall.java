@@ -4,7 +4,7 @@ import DataBase.Model.Department;
 import DataBase.Model.Enterprise;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ public class FireBall implements BaseFireModel {
     private ArrayList<Double> probitFunctionValue;
     private double fireballExistenceTime;
     private double expositionTime;
+    private String type;
 
     @Autowired
     private Coefficients coefficients;
@@ -27,7 +28,7 @@ public class FireBall implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationRequest calculationRequest) {
+    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
         double fireballEffectiveDiameter = 6.48 * Math.pow(amount.getMass(), 0.325);
         double H = fireballEffectiveDiameter;
 
@@ -54,5 +55,9 @@ public class FireBall implements BaseFireModel {
             probitFunctionValue.add(value);
        }
        return probitFunctionValue;
+    }
+
+    public FireBall(){
+        this.type="Пожар";
     }
 }

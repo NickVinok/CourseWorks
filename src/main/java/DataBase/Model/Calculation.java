@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 @Entity
 public class Calculation {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -20,4 +21,5 @@ public class Calculation {
     private Timestamp time;
     private double collectiveRisk;
     private double matterConsumption;
+    private double matterQuantity;
 }

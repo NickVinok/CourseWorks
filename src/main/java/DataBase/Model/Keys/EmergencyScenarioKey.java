@@ -11,15 +11,17 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 public class EmergencyScenarioKey implements Serializable {
-        @Column(name = "damagingFactorId")
-        private long damagingFactor;
-        @Column(name = "accidentId")
-        private long accident;
+        @Column(name = "substanceTypeId")
+        private long substanceTypeId;
+        @Column(name = "destructionTypeId")
+        private long destructionTypeId;
+        @Column(name = "emergencySubtypeId")
+        private long emergencySubtypeId;
 
-        public EmergencyScenarioKey(long damagingFactor, long accident){
-            this.accident = accident;
-            this.damagingFactor = damagingFactor;
+
+        public EmergencyScenarioKey(long substanceTypeId, long destructionTypeId, long emergencySubtypeId){
+            this.substanceTypeId = substanceTypeId;
+            this.destructionTypeId = destructionTypeId;
+            this.emergencySubtypeId = emergencySubtypeId;
         }
-
-
 }

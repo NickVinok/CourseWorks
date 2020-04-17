@@ -5,7 +5,7 @@ import DataBase.Model.Department;
 import DataBase.Model.EquipmentClass;
 import DataBase.Model.Substance;
 import DataBase.Service.Coefficients;
-import Mathematics.CalculationRequest;
+import Utils.CalculationVariableParameters;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +24,7 @@ public class Amount {
     private ArrayList<Double> radiusArray;
 
 
-    public void calculate(EquipmentClass equipmentClass, Department dep, Substance substance, CalculationRequest input){
+    public void calculate(EquipmentClass equipmentClass, Department dep, Substance substance, CalculationVariableParameters input){
         this.radiusArray = generateRadiusArray();
 
         double massCoefficient = input.getFullnessPercent()* equipmentClass.getVolume()*substance.getDensity();
@@ -37,7 +37,7 @@ public class Amount {
         calculateProductConsumption(substance, equipmentClass, input);
     }
 
-    private double quantityOfImmediatelyBoilingLiquidCalculation(double massCoefficient, Substance substance, CalculationRequest input){
+    private double quantityOfImmediatelyBoilingLiquidCalculation(double massCoefficient, Substance substance, CalculationVariableParameters input){
         if(input.getLiquidTemperature()<substance.getBoilingTemperature()){
             return 0;
         }
@@ -46,13 +46,13 @@ public class Amount {
         return massCoefficient*(1-Math.pow(Math.E, expVal));
     }
 
-    private double quantityOfLiquidInVaporFormCalculation(double fullnessPercent, Substance substance, EquipmentClass equipmentClass, CalculationRequest input){
+    private double quantityOfLiquidInVaporFormCalculation(double fullnessPercent, Substance substance, EquipmentClass equipmentClass, CalculationVariableParameters input){
         double firstPart = (1-fullnessPercent)*substance.getMolarMass()/coefficients.getUniversalGasConst();
         double secondPart = input.getEquipmentPressure()* equipmentClass.getVolume()*(273+input.getLiquidTemperature()); //TODO температура в оборудовании==температура жидкости в оборудовании
         return firstPart*secondPart;
     }
 
-    private double quantityOfLiquidSteamEvaporatingFromCane(Substance substance, Department dep, CalculationRequest input){
+    private double quantityOfLiquidSteamEvaporatingFromCane(Substance substance, Department dep, CalculationVariableParameters input){
         if(input.getLiquidTemperature()<substance.getBoilingTemperature()){
             return 0;
         }
@@ -64,7 +64,7 @@ public class Amount {
         return firstPart*secondPart;
     }
 
-    private double quantityOfMirrorLiquidEvaporating(Substance substance, double massCoef, double immediateBoilingLiquidMass, CalculationRequest input){
+    private double quantityOfMirrorLiquidEvaporating(Substance substance, double massCoef, double immediateBoilingLiquidMass, CalculationVariableParameters input){
         double firstPartSteamPressure = (1/(substance.getBoilingTemperature()+273)-1/(273+input.getCurrentTemperature()));
         double secondPartSteamPressure = (substance.getSpecificEvaporationHeat()*substance.getMolarMass()
                 /coefficients.getUniversalGasConst());
@@ -75,7 +75,7 @@ public class Amount {
         return evaporationArea*evaporationIntensity*evaporationTime;
     }
 
-    private void calculateProductConsumption(Substance substance, EquipmentClass equipmentClass, CalculationRequest input){
+    private void calculateProductConsumption(Substance substance, EquipmentClass equipmentClass, CalculationVariableParameters input){
         double geomPressure = equipmentClass.getHeight()*input.getFullnessPercent()-input.getHoleHeight();
         double unitlessGeometricPressure = geomPressure + input.getEquipmentPressure()/substance.getDensity()
                 - input.getAtmosphericPressure()/substance.getDensity();

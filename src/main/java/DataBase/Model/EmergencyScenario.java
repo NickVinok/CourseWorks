@@ -12,11 +12,13 @@ public class EmergencyScenario {
     private EmergencyScenarioKey emergencyScenarioKey;
 
     private double probability;
+    private boolean isEnd;
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("potentiallyDangerousSituationId")
-    @JoinColumn(name = "potentiallyDangerousSituationId")
-    private PotentiallyDangerousSituation potentiallyDangerousSituationId;
+    @MapsId("destructionTypeId")
+    @JoinColumn(name = "destructionTypeId")
+    private DestructionType destructionTypeId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("damagingFactorId")

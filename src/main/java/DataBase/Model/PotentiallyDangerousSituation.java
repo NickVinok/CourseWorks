@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 public class PotentiallyDangerousSituation {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
     private double holeDiameter;
@@ -22,4 +23,9 @@ public class PotentiallyDangerousSituation {
     @MapsId("eventId")
     @JoinColumn(name = "eventId")
     private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId("destructionTypeId")
+    @JoinColumn(name = "destructionTypeId")
+    private DestructionType destructionType;
 }

@@ -2,15 +2,13 @@ package DataBase.Model;
 
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Data
 @Entity
 public class Coefficients {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String name;
     private String measurementUnit;
