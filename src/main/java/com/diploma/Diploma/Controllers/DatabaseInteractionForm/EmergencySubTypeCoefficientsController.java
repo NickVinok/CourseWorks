@@ -16,7 +16,7 @@ public class EmergencySubTypeCoefficientsController {
     @Autowired
     EmergencySubTypeCoefficientsRepo repo;
 
-    @PostMapping("/{id}")
+    @PostMapping("/get")
     public EmergencySubTypeCoefficients getEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficientsKey key){
         return repo.findById(key).get();
     }
@@ -28,6 +28,7 @@ public class EmergencySubTypeCoefficientsController {
 
     @PostMapping
     public EmergencySubTypeCoefficients newEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergencySubTypeCoefficients){
+        //System.out.println(emergencySubTypeCoefficients);
         return repo.save(emergencySubTypeCoefficients);
     }
 

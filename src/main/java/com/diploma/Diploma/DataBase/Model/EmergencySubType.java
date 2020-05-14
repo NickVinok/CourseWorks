@@ -14,8 +14,7 @@ public class EmergencySubType {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("emergencyId")
-    @JoinColumn(name = "emergencyId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "emergencyId", referencedColumnName = "id")
     private Emergency emergency;
 }

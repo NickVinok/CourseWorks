@@ -15,13 +15,13 @@ public class RolesRight {
     @Column(columnDefinition = "TINYINT", name="has")
     private boolean has;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("rightId")
-    @JoinColumn(name = "rightId")
+    @JoinColumn(name = "rightId", referencedColumnName = "id")
     private Rights rights;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("roleId")
-    @JoinColumn(name = "roleId")
+    @JoinColumn(name = "roleId", referencedColumnName = "id")
     private Role role;
 }

@@ -10,10 +10,9 @@ public class GeneralCoefficients {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
-    @MapsId("coefficientsId")
-    @JoinColumn(name = "coefficientsId")
-    //@OnDelete(action = OnDeleteAction.CASCADE)
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coefficientsId", referencedColumnName = "id")
     private Coefficients coefficients;
     private double value;
 }

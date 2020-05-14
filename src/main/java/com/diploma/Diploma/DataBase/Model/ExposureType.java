@@ -14,8 +14,7 @@ public class ExposureType {
     private String name;
     private String measurementUnit;
 
-    @ManyToOne
-    @JoinColumn(name = "emergencyId")
-    @MapsId("emergencyId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "emergencyId", referencedColumnName = "id")
     private Emergency emergency;
 }

@@ -1,5 +1,6 @@
 package com.diploma.Diploma.DataBase.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,18 +16,15 @@ public class PotentiallyDangerousSituation {
     private double holeDiameter;
     private double depressurizationFrequency;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("equipmentTypeId")
-    @JoinColumn(name = "equipmentTypeId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "equipmentTypeId", referencedColumnName = "id")
     private EquipmentType equipmentType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("eventId")
-    @JoinColumn(name = "eventId")
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @JoinColumn(name = "eventId", referencedColumnName = "id")
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("destructionTypeId")
-    @JoinColumn(name = "destructionTypeId")
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @JoinColumn(name = "destructionTypeId", referencedColumnName = "id")
     private DestructionType destructionType;
 }

@@ -14,13 +14,11 @@ public class Territory {
     private double distanceFromPreviousTerritory;
     private double populationDensity;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("zoneId")
-    @JoinColumn(name = "zoneId")
-    private Zone zoneId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "zoneId", referencedColumnName = "id")
+    private Zone zone;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("enterpriseId")
-    @JoinColumn(name = "enterpriseId")
-    private Enterprise enterpriseId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "enterpriseId", referencedColumnName = "id")
+    private Enterprise enterprise;
 }

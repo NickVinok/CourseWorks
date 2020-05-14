@@ -27,6 +27,7 @@ public class CoefficientsController {
 
     @PostMapping
     public ResponseEntity<Coefficients> newCoefficient(@RequestBody Coefficients coefficients){
+        System.out.println(coefficients);
         return ResponseEntity.ok(repo.save(coefficients));
     }
 
@@ -40,7 +41,7 @@ public class CoefficientsController {
         }
     }
 
-    @PostMapping("/{id}")
+    @DeleteMapping("/{id}")
     public void deleteCoefficient(@PathVariable long id){
         repo.deleteById(id);
     }

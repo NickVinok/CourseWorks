@@ -10,4 +10,5 @@ import java.util.List;
 public class LoginResearcherResponse implements LoginBasicResponse{
     private LoginResponse loginResponse;
     private List<Enterprise> initialDataForCalculation;
+    private String login;
 }

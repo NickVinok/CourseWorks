@@ -3,10 +3,7 @@ package com.diploma.Diploma.Logics;
 import com.diploma.Diploma.Controllers.RequsetObjects.CalculationRequest.CalculationStartRequest;
 import com.diploma.Diploma.DataBase.Model.*;
 import com.diploma.Diploma.DataBase.Model.Keys.DamagingExposureCalculationKey;
-import com.diploma.Diploma.DataBase.Repo.CalculationRepo;
-import com.diploma.Diploma.DataBase.Repo.ExposureTypeRepo;
-import com.diploma.Diploma.DataBase.Repo.PotentiallyDangerousSituationRepo;
-import com.diploma.Diploma.DataBase.Repo.TerritoryRepo;
+import com.diploma.Diploma.DataBase.Repo.*;
 import com.diploma.Diploma.DataBase.Service.EmergencyService;
 import com.diploma.Diploma.Mathematics.AffectedAreaModels.BaseModel;
 import com.diploma.Diploma.Mathematics.AffectedAreaModels.Explosion.BaseExplosionModel;
@@ -46,6 +43,8 @@ public class CalculationLogic {
     private CalculationRepo calculationRepo;
     @Autowired
     private ExposureTypeRepo exposureTypeRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     private ArrayList<EmergencySubTypeDamageCalculation> results;
     private Calculation calc;
@@ -65,17 +64,20 @@ public class CalculationLogic {
                     .map(PotentiallyDangerousSituation::getHoleDiameter)
                     .max(Double::compareTo)
                     .get();
+            //System.out.println(maxDiameter);
+            //System.out.println(startData.getCalculationVariableParameters().getHoleDiameter());
             if (maxDiameter < startData.getCalculationVariableParameters().getHoleDiameter()) {
                 pds = list.stream()
                         .max(Comparator.comparingDouble(PotentiallyDangerousSituation::getHoleDiameter)).get();
             } else {
-                pds = list.stream().filter(x -> x.getHoleDiameter() > maxDiameter)
+                pds = list.stream().filter(x -> x.getHoleDiameter() > startData.getCalculationVariableParameters().getHoleDiameter())
                         .min(Comparator.comparingDouble(PotentiallyDangerousSituation::getHoleDiameter)).get();
             }
         } else {
             pds = list.get(0);
         }
-        List<Territory> territoryList = territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
+        //territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
+        List<Territory> territoryList = territoryRepo.findByEnterpriseId(startData.getEnterprise());
 
         emergencyService.getEmergencyRelatedData(equipmentClass.getEquipmentType().getId(), startData.getEvent().getId(),
                 substance.getSubstanceType().getId(), destructionType.getId());
@@ -86,12 +88,13 @@ public class CalculationLogic {
 
         List<BaseModel> mathModelsOfEmergencies = convertEmergenciesToMathModels(emergencies);
         Amount amount = new Amount();
-        amount.calculate(equipmentClass, startData.getDepartment(), substance, startData.getCalculationVariableParameters());
+        amount.calculate(equipmentClass, startData.getEquipmentInDepartment().getDepartment(), substance,
+                startData.getEquipmentInDepartment().getFullnessPercent(),startData.getCalculationVariableParameters());
 
         ProbitFunctionsToExposureProbability pf = new ProbitFunctionsToExposureProbability();
         List<List<Double>> exposureProbabilitiesForAllEmergencies = new ArrayList<>();
         for (BaseModel bm : mathModelsOfEmergencies) {
-            bm.calculate(substance, amount, startData.getDepartment(), startData.getEnterprise(), startData.getCalculationVariableParameters());
+            bm.calculate(substance, amount, startData.getEquipmentInDepartment().getDepartment(), startData.getEnterprise(), startData.getCalculationVariableParameters());
             exposureProbabilitiesForAllEmergencies.add(pf.convert(bm.getProbitFunctionValues(amount.getRadiusArray())));
         }
         RiskCalculation rk = new RiskCalculation();
@@ -102,7 +105,7 @@ public class CalculationLogic {
 
         this.calc = new Calculation();
         calc.setTime(new Timestamp(System.currentTimeMillis()));
-        calc.setUser(startData.getUser());
+        calc.setUser(userRepo.findByLogin(startData.getLogin()).get());
         calc.setMatterQuantity(amount.getMass());
         this.calc = calculationRepo.saveAndFlush(calc);
         //calc.setMatterConsumption(amount.getProductConsumption()); когда разберусь, когда этот параметр есть, а когда нет

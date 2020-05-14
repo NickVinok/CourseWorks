@@ -36,6 +36,8 @@ public class StraightFire implements BaseFireModel {
         //Здесь используется понятие площади пролива
         //Его мы берём из документа TODO РД 03-26-2007
 
+        double airDensity = calculationVariableParameters.getAtmosphericPressure()*29/
+                (calculationVariableParameters.getCurrentTemperature()*coefficients.getUniversalGasConst());
         //Для вычисления эффективного диаметра пролива
         double straitPane;
         if (enterprise.getArea()!=0){
@@ -58,7 +60,7 @@ public class StraightFire implements BaseFireModel {
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                     /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(calculationVariableParameters.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(airDensity *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {

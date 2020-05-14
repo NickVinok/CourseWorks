@@ -1,5 +1,8 @@
 package com.diploma.Diploma.DataBase.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,20 +20,17 @@ public class EquipmentInDepartment {
     private Timestamp storageStartDate;
     private Timestamp storageEndDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("equipmentClassId")
-    @JoinColumn(name = "equipmentClassId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "equipmentClassId", referencedColumnName = "id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private EquipmentClass equipmentClass;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("departmentId")
-    @JoinColumn(name = "departmentId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "departmentId", referencedColumnName = "id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
-    private EquipmentClass department;
+    private Department department;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("substanceId")
-    @JoinColumn(name = "substanceId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "substanceId", referencedColumnName = "id")
     private Substance substance;
 }

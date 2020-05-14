@@ -7,4 +7,5 @@ import lombok.Data;
 public class LoginErrorResponse implements LoginBasicResponse{
     private LoginResponse loginResponse;
     private String message;
+    private String login;
 }

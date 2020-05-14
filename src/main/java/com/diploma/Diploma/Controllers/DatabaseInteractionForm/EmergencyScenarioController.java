@@ -16,8 +16,9 @@ public class EmergencyScenarioController {
     @Autowired
     EmergencyScenarioRepo repo;
 
-    @PostMapping("/{id}")
+    @PostMapping("/get")
     public EmergencyScenario getEmergencyScenario(@RequestBody EmergencyScenarioKey key){
+        System.out.println(key);
         return repo.findById(key).get();
     }
 

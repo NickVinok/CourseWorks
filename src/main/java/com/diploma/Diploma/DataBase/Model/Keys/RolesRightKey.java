@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 public class RolesRightKey implements Serializable {
-    @Column(name = "rightId")
+    @Column(name = "rightsId")
     private long rightId;
     @Column(name = "roleId")
     private long roleId;

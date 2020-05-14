@@ -14,16 +14,4 @@ public class EquipmentType {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String name;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "equipmentType")
-    private List<PotentiallyDangerousSituation> potentiallyDangerousSituations = new ArrayList<>();
-
-    public void addPotentiallyDangerousSituation(PotentiallyDangerousSituation potentiallyDangerousSituation){
-        potentiallyDangerousSituation.setEquipmentType(this);
-        potentiallyDangerousSituations.add(potentiallyDangerousSituation);
-    }
-    public void deleteDepartment(PotentiallyDangerousSituation potentiallyDangerousSituation){
-        potentiallyDangerousSituations.remove(potentiallyDangerousSituation);
-        potentiallyDangerousSituation.setEquipmentType(null);
-    }
 }

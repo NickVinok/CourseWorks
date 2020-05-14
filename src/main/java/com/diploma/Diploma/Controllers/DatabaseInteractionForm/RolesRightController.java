@@ -16,7 +16,7 @@ public class RolesRightController {
     @Autowired
     RolesRightRepo repo;
 
-    @PostMapping("/{id}")
+    @PostMapping("/get")
     public RolesRight getRolesRight(@RequestBody RolesRightKey key){
         return repo.findById(key).get();
     }
@@ -28,6 +28,7 @@ public class RolesRightController {
 
     @PostMapping
     public RolesRight newRolesRight(@RequestBody RolesRight rolesRight){
+        System.out.println(rolesRight);
         return repo.save(rolesRight);
     }
 

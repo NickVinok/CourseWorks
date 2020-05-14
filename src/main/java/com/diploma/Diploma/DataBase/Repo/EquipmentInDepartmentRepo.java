@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface EquipmentInDepartmentRepo extends JpaRepository<EquipmentInDepartment, Long> {
     Optional<List<EquipmentInDepartment>> findByDepartmentIdAndSubstanceIdNot(long departmentId, long substanceId);
+    Optional<List<EquipmentInDepartment>> findBySubstanceIdIsNotNullAndDepartmentIdIn(List<Long> departmentIds);
 }

@@ -19,10 +19,8 @@ public class User {
     private String login;
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("roleId")
-    @JoinColumn(name = "roleId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "roleId", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Role role;
-
 }

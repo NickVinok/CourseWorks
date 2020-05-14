@@ -17,14 +17,6 @@ public class UserFormInitialDataService {
     private EquipmentInDepartmentRepo equipmentInDepartmentRepo;
 
     public List<Enterprise> getDataForCalculation(){
-        List<Enterprise> enterprises = enterpriseRepo.findAll();
-        //Находим все доступные предприятия
-        for(Enterprise e : enterprises){
-            for(Department d : e.getDepartments()){
-                var tmpEiD = equipmentInDepartmentRepo.findByDepartmentIdAndSubstanceIdNot(d.getId(), -1);
-                tmpEiD.ifPresent(d::setEquipmentInDepartments);
-            }
-        }
-        return enterprises;
+        return enterpriseRepo.findAll();
     }
 }

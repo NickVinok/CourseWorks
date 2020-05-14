@@ -1,5 +1,6 @@
 package com.diploma.Diploma.DataBase.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class EquipmentClass {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "equipmentTypeId", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private EquipmentType equipmentType;
 }

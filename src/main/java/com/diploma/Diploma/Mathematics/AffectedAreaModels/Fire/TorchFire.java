@@ -31,6 +31,9 @@ public class TorchFire implements BaseFireModel {
 
     @Override
     public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
+        double airDensity = calculationVariableParameters.getAtmosphericPressure()*29/
+                (calculationVariableParameters.getCurrentTemperature()*coefficients.getUniversalGasConst());
+
         //Расчёт длины и ширины факела
         double torchLength = coefficients.getTorchLengthCoefficient()*Math.pow(amount.getProductConsumption(), 0.4);
         double effectiveDiameter=0.15*torchLength;
@@ -47,7 +50,7 @@ public class TorchFire implements BaseFireModel {
                 /Math.cbrt(coefficients.getFreeFallAcceleration() *effectiveDiameter*specificMassBurnoutRate
                 /substance.getFuelVapourDensity());
         double massBurnoutPart = specificMassBurnoutRate
-                /(calculationVariableParameters.getAirDensity() *Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
+                /(airDensity*Math.sqrt(coefficients.getFreeFallAcceleration()*effectiveDiameter));
         if(coefficient>=1){
             flameLength=55*effectiveDiameter*Math.pow(coefficient, 0.21)*Math.pow(massBurnoutPart,0.67);
         } else {

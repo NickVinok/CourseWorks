@@ -23,18 +23,21 @@ public class LoginController {
             LoginErrorResponse incorrectLoginResponse = new LoginErrorResponse();
             incorrectLoginResponse.setLoginResponse(this.loginLogic.getLoginResponse());
             incorrectLoginResponse.setMessage("Пользователя с таким логином не существует");
+            incorrectLoginResponse.setLogin(loginRequest.getLogin());
             response = incorrectLoginResponse;
         }
         else if(!this.loginLogic.getLoginResponse().isPasswordCorrect()){
             LoginErrorResponse incorrectPasswordResponse = new LoginErrorResponse();
             incorrectPasswordResponse.setLoginResponse(this.loginLogic.getLoginResponse());
             incorrectPasswordResponse.setMessage("Неверный пароль");
+            incorrectPasswordResponse.setLogin(loginRequest.getLogin());
             response = incorrectPasswordResponse;
         }
         else if(this.loginLogic.getLoginResponse().isResearcher()) {
             LoginResearcherResponse researcherResponse = new LoginResearcherResponse();
             researcherResponse.setLoginResponse(this.loginLogic.getLoginResponse());
             researcherResponse.setInitialDataForCalculation(this.loginLogic.getUserFormData());
+            researcherResponse.setLogin(loginRequest.getLogin());
             response = researcherResponse;
         }
         else if(this.loginLogic.getLoginResponse().isEnterpriseAdmin()) {

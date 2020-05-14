@@ -16,18 +16,18 @@ public class EmergencyScenario {
     private boolean isEnd;
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("destructionTypeId")
-    @JoinColumn(name = "destructionTypeId")
-    private DestructionType destructionTypeId;
+    @JoinColumn(name = "destructionTypeId", referencedColumnName = "id")
+    private DestructionType destructionType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("emergencySubTypeId")
-    @JoinColumn(name = "emergencySubTypeId")
+    @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
     private EmergencySubType emergencySubType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("substanceTypeId")
-    @JoinColumn(name = "substanceTypeId")
+    @JoinColumn(name = "substanceTypeId", referencedColumnName = "id")
     private SubstanceType substanceType;
 }

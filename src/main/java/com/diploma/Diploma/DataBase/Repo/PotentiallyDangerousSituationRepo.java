@@ -10,4 +10,5 @@ import java.util.List;
 public interface PotentiallyDangerousSituationRepo extends JpaRepository<PotentiallyDangerousSituation, Long> {
     List<PotentiallyDangerousSituation> findByEquipmentTypeIdAndEventIdAndDestructionTypeId
             (long equipmentTypeId, long eventId, long destructionTypeId);
+    List<PotentiallyDangerousSituation> findByEquipmentTypeId(long equipmentTypeId);
 }

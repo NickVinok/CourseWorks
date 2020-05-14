@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/potentiallyDangerousSituation")
-public class PotentiallyDangerousSituationController {
+public class  PotentiallyDangerousSituationController {
     @Autowired
     PotentiallyDangerousSituationRepo repo;
 
@@ -26,7 +26,8 @@ public class PotentiallyDangerousSituationController {
     }
 
     @PostMapping
-    public PotentiallyDangerousSituation newPotentiallyDangerousSituation(@RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
+    public PotentiallyDangerousSituation newPotentiallyDangerousSituation(
+            @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
         return repo.save(potentiallyDangerousSituation);
     }
 

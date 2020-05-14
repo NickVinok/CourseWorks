@@ -14,13 +14,13 @@ public class EmergencySubTypeCoefficients {
 
     private double value;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("coefficientsId")
-    @JoinColumn(name = "coefficientsId")
+    @JoinColumn(name = "coefficientsId", referencedColumnName = "id")
     private Coefficients coefficients;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("emergencySubTypeId")
-    @JoinColumn(name = "emergencySubTypeId")
+    @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
     private EmergencySubType emergencySubType;
 }

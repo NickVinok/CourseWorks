@@ -16,12 +16,12 @@ public class EmergencyScenarioKey implements Serializable {
         @Column(name = "destructionTypeId")
         private long destructionTypeId;
         @Column(name = "emergencySubTypeId")
-        private long emergencySubtypeId;
+        private long emergencySubTypeId;
 
 
-        public EmergencyScenarioKey(long substanceTypeId, long destructionTypeId, long emergencySubtypeId){
+        public EmergencyScenarioKey(long substanceTypeId, long destructionTypeId, long emergencySubTypeId){
             this.substanceTypeId = substanceTypeId;
             this.destructionTypeId = destructionTypeId;
-            this.emergencySubtypeId = emergencySubtypeId;
+            this.emergencySubTypeId = emergencySubTypeId;
         }
 }

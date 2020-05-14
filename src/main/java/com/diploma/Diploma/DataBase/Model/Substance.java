@@ -25,12 +25,12 @@ public class Substance {
     private double concentrationLimitMinimalValue; //Нижний концентрационный предел
 
     //TODO Нормально вставить декоратор от Hibernate и разобраться с OnDelete (Сделать двусторонюю связь)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "explosionSensitivityId", nullable = false)
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private ExplosionSensitivity explosionSensitivity;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "substanceTypeId", nullable = false)
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private SubstanceType substanceType;

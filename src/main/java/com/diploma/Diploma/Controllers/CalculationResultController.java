@@ -2,13 +2,13 @@ package com.diploma.Diploma.Controllers;
 
 import com.diploma.Diploma.Controllers.PesponseObjects.CalculationResponse.CalculationResponse;
 import com.diploma.Diploma.Controllers.RequsetObjects.CalculationRequest.CalculationStartRequest;
+import com.diploma.Diploma.DataBase.Model.Enterprise;
 import com.diploma.Diploma.DataBase.Repo.EmergencySubTypeDamageCalculationRepo;
 import com.diploma.Diploma.Logics.CalculationLogic;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/calculate")

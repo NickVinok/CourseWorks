@@ -26,7 +26,7 @@ public class EmergencyController {
     }
 
     @PostMapping
-    public Emergency newDepartment(@RequestBody Emergency emergency){
+    public Emergency newEmergency(@RequestBody Emergency emergency){
         return repo.save(emergency);
     }
 
