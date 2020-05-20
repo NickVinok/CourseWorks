@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface TerritoryRepo extends JpaRepository<Territory, Long> {
-    List<Territory> findByEnterpriseId(Enterprise enterprise);
+    List<Territory> findByEnterpriseId(long enterprise);
 }

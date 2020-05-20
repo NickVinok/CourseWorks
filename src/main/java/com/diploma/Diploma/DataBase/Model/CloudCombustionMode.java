@@ -12,12 +12,12 @@ public class CloudCombustionMode {
     @EmbeddedId
     private CloudCombustionModeKey cloudCombustionModeKey;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("clutterClassId")
     @JoinColumn(name = "clutterClassId")
     private ClutterClass clutterClass;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("explosionSensitivityId")
     @JoinColumn(name = "explosionSensitivityId")
     private ExplosionSensitivity explosionSensitivity;

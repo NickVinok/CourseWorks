@@ -18,9 +18,8 @@ public class VaporExplosion implements BaseExplosionModel {
     private ArrayList<Double> probitFunctionValue;
     private String type;
 
-    @Autowired
     private Coefficients coefficients;
-    @Autowired
+
     private CloudCombustionModeRepo cloudCombustionModeRepo;
 
     @Override
@@ -34,7 +33,9 @@ public class VaporExplosion implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
+    public void calculate(Substance substance, Amount amount, Department department, Coefficients coefficients,
+                          Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
+        this.cloudCombustionModeRepo = ccmr;
         //Считаем эффективный энергозапас горючей смеси
         double E = amount.getMass() //масса горючего вещества, участвующего в облаке
                 *coefficients.getSubstanceParticipationInExplosion() //коэффициент участия гор.вещ. во взрыве
@@ -46,6 +47,7 @@ public class VaporExplosion implements BaseExplosionModel {
 
         CloudCombustionModeKey key = new CloudCombustionModeKey(department.getClutterClass().getId(),
                 substance.getExplosionSensitivity().getId());
+
         CloudCombustionMode ccm = cloudCombustionModeRepo.findById(key).get();
 
         if(ccm.getFlameFrontSpeed()==0){
@@ -60,7 +62,8 @@ public class VaporExplosion implements BaseExplosionModel {
             unitlessDistance.add(dist/
                     (Math.pow(E/ calculationVariableParameters.getAtmosphericPressure(), 0.33)));
         }
-
+        this.excessPressure = new ArrayList<>();
+        this.impulse = new ArrayList<>();
         for(Double dist : unitlessDistance){
             double unitlessPressure = Math.pow(Vr/C0,2)
                     *((coefficients.getCombustionProductExpansionDegree()-1)/coefficients.getCombustionProductExpansionDegree()) //TODO ВОЗМОЖНО СТОИТ ЗАНЕСТИ В ОТДУЛЬНУЮ ПЕРЕМЕННУЮ

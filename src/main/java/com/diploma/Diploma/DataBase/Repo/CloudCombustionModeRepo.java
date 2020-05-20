@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CloudCombustionModeRepo extends JpaRepository<CloudCombustionMode, CloudCombustionModeKey> {
+    CloudCombustionMode findByCloudCombustionModeKey_ClutterClassIdAndCloudCombustionModeKey_ExplosionSensitivityId(long cc, long es);
 }

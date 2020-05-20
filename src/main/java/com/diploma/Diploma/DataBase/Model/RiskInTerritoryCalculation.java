@@ -14,13 +14,13 @@ public class RiskInTerritoryCalculation {
 
     private double averageRisk;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("territoryId")
     @JoinColumn(name = "territoryId")
     private Territory territory;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("calculationId")
-    @JoinColumn(name = "calculationId")
+    @JoinColumn(name = "calculationId", referencedColumnName = "id")
     private Calculation calculation;
 }

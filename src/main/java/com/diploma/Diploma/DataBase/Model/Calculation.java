@@ -13,9 +13,8 @@ public class Calculation {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("userId")
-    @JoinColumn(name = "userId")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
     private Timestamp time;

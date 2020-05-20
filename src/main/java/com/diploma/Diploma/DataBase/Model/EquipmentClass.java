@@ -18,9 +18,8 @@ public class EquipmentClass {
     private double maxTemperature;
     private double maxPressure;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "equipmentTypeId", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "equipmentTypeId", nullable = false, referencedColumnName = "id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private EquipmentType equipmentType;
 }

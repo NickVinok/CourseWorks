@@ -12,19 +12,19 @@ public class EmergencySubTypeDamageCalculation {
     @EmbeddedId
     private DamagingExposureCalculationKey damagingExposureCalculationKey;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("emergencySubTypeId")
-    @JoinColumn(name = "emergencySubTypeId")
+    @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
     private EmergencySubType emergencySubType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("calculationId")
-    @JoinColumn(name = "calculationId")
+    @JoinColumn(name = "calculationId", referencedColumnName = "id")
     private Calculation calculation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("exposureTypeId")
-    @JoinColumn(name = "exposureTypeId")
+    @JoinColumn(name = "exposureTypeId", referencedColumnName = "id")
     private ExposureType exposureType;
 
     private double probitFunctionValue;

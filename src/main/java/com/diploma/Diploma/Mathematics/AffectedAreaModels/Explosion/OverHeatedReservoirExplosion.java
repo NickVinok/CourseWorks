@@ -3,6 +3,7 @@ package com.diploma.Diploma.Mathematics.AffectedAreaModels.Explosion;
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Model.Enterprise;
 import com.diploma.Diploma.DataBase.Model.Substance;
+import com.diploma.Diploma.DataBase.Repo.CloudCombustionModeRepo;
 import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
 import com.diploma.Diploma.Mathematics.MatterAmountCalculation.Amount;
@@ -18,7 +19,6 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     private ArrayList<Double> probitFunctionValue;
     private String type;
 
-    @Autowired
     private Coefficients coefficients;
 
     @Override
@@ -32,7 +32,8 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
+    public void calculate(Substance substance, Amount amount, Department department, Coefficients coefficients,
+                          Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
 
         double explosionEfficientEnergy=coefficients.getPressureWaveEnergy()*substance.getSpecificHeat()*amount.getMass()
                 *(calculationVariableParameters.getLiquidTemperature()-substance.getBoilingTemperature());

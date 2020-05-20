@@ -22,7 +22,7 @@ public class Department {
     private long id;
     private double area;
     private String floorType;
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "clutterClassId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ClutterClass clutterClass;

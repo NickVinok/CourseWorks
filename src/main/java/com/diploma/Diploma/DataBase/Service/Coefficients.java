@@ -3,7 +3,6 @@ package com.diploma.Diploma.DataBase.Service;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
-//TODO потом раскидать коэффициенты, а не хранить в одном месте
 @Service
 @Data
 public class Coefficients {

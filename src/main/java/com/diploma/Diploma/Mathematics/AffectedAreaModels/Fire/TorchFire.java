@@ -3,6 +3,7 @@ package com.diploma.Diploma.Mathematics.AffectedAreaModels.Fire;
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Model.Enterprise;
 import com.diploma.Diploma.DataBase.Model.Substance;
+import com.diploma.Diploma.DataBase.Repo.CloudCombustionModeRepo;
 import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
 import com.diploma.Diploma.Mathematics.MatterAmountCalculation.Amount;
@@ -20,8 +21,6 @@ public class TorchFire implements BaseFireModel {
     private ArrayList<Double> expositionTime;
     private String type;
 
-
-    @Autowired
     private Coefficients coefficients;
 
     @Override
@@ -30,7 +29,8 @@ public class TorchFire implements BaseFireModel {
     }
 
     @Override
-    public void calculate(Substance substance, Amount amount, Department department, Enterprise enterprise, CalculationVariableParameters calculationVariableParameters) {
+    public void calculate(Substance substance, Amount amount, Department department, Coefficients coefficients,
+                          Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
         double airDensity = calculationVariableParameters.getAtmosphericPressure()*29/
                 (calculationVariableParameters.getCurrentTemperature()*coefficients.getUniversalGasConst());
 

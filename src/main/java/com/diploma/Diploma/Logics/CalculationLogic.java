@@ -46,6 +46,11 @@ public class CalculationLogic {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private Amount amount;
+    @Autowired
+    private CloudCombustionModeRepo cloudCombustionModeRepo;
+
     private ArrayList<EmergencySubTypeDamageCalculation> results;
     private Calculation calc;
 
@@ -77,7 +82,7 @@ public class CalculationLogic {
             pds = list.get(0);
         }
         //territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
-        List<Territory> territoryList = territoryRepo.findByEnterpriseId(startData.getEnterprise());
+        List<Territory> territoryList = territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
 
         emergencyService.getEmergencyRelatedData(equipmentClass.getEquipmentType().getId(), startData.getEvent().getId(),
                 substance.getSubstanceType().getId(), destructionType.getId());
@@ -87,14 +92,15 @@ public class CalculationLogic {
                 .collect(Collectors.toList());
 
         List<BaseModel> mathModelsOfEmergencies = convertEmergenciesToMathModels(emergencies);
-        Amount amount = new Amount();
+
         amount.calculate(equipmentClass, startData.getEquipmentInDepartment().getDepartment(), substance,
-                startData.getEquipmentInDepartment().getFullnessPercent(),startData.getCalculationVariableParameters());
+                startData.getEquipmentInDepartment().getFullnessPercent()/100,startData.getCalculationVariableParameters());
 
         ProbitFunctionsToExposureProbability pf = new ProbitFunctionsToExposureProbability();
         List<List<Double>> exposureProbabilitiesForAllEmergencies = new ArrayList<>();
         for (BaseModel bm : mathModelsOfEmergencies) {
-            bm.calculate(substance, amount, startData.getEquipmentInDepartment().getDepartment(), startData.getEnterprise(), startData.getCalculationVariableParameters());
+            bm.calculate(substance, amount, startData.getEquipmentInDepartment().getDepartment(),
+                    this.amount.getCoefficients(), startData.getEnterprise(), startData.getCalculationVariableParameters(), cloudCombustionModeRepo);
             exposureProbabilitiesForAllEmergencies.add(pf.convert(bm.getProbitFunctionValues(amount.getRadiusArray())));
         }
         RiskCalculation rk = new RiskCalculation();
@@ -105,6 +111,7 @@ public class CalculationLogic {
 
         this.calc = new Calculation();
         calc.setTime(new Timestamp(System.currentTimeMillis()));
+        System.out.println(startData.getLogin());
         calc.setUser(userRepo.findByLogin(startData.getLogin()).get());
         calc.setMatterQuantity(amount.getMass());
         this.calc = calculationRepo.saveAndFlush(calc);
@@ -195,7 +202,7 @@ public class CalculationLogic {
                     double radiusKey = amount.getRadiusArray().get(i);
                     long emergencyId = emergencies.get(j).getId();
                     ExposureType flash = flashExposures.stream()
-                            .filter(x -> x.getName().equals("Страшная страшная смерть"))
+                            .filter(x -> x.getName().equals("Страшная смерть"))
                             .findFirst().get();
                     long calculationId = this.calc.getId();
 

@@ -14,10 +14,10 @@ public class CloudCombustionModeKey implements Serializable {
     @Column(name = "clutterClassId")
     private long clutterClassId;
     @Column(name = "explosionSensitivityId")
-    private long explosionSensitivityClassId;
+    private long explosionSensitivityId;
 
-    public CloudCombustionModeKey(long clutterClassId, long explosionSensitivityClassId){
+    public CloudCombustionModeKey(long clutterClassId, long explosionSensitivityId){
         this.clutterClassId = clutterClassId;
-        this.explosionSensitivityClassId = explosionSensitivityClassId;
+        this.explosionSensitivityId = explosionSensitivityId;
     }
 }
