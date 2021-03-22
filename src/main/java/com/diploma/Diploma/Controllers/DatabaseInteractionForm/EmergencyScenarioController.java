@@ -17,9 +17,9 @@ public class EmergencyScenarioController {
     EmergencyScenarioRepo repo;
 
     @PostMapping("/get")
-    public EmergencyScenario getEmergencyScenario(@RequestBody EmergencyScenarioKey key){
-        System.out.println(key);
-        return repo.findById(key).get();
+    public Optional<EmergencyScenario> getEmergencyScenario(@RequestBody EmergencyScenarioKey key){
+        //System.out.println(key);
+        return repo.findById(key);
     }
 
     @GetMapping()
@@ -32,7 +32,7 @@ public class EmergencyScenarioController {
         return repo.save(emergencyScenario);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<EmergencyScenario> updateEmergencyScenario(@RequestBody EmergencyScenario emergency){
         Optional<EmergencyScenario> tmp = repo.findById(emergency.getEmergencyScenarioKey());
         if(tmp.isPresent()){

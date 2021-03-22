@@ -16,8 +16,8 @@ public class EmergencyController {
     EmergencyRepo repo;
 
     @GetMapping("/{id}")
-    public Emergency getEmergency(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Emergency> getEmergency(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

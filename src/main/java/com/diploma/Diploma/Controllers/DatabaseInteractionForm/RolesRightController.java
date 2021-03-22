@@ -17,8 +17,8 @@ public class RolesRightController {
     RolesRightRepo repo;
 
     @PostMapping("/get")
-    public RolesRight getRolesRight(@RequestBody RolesRightKey key){
-        return repo.findById(key).get();
+    public Optional<RolesRight> getRolesRight(@RequestBody RolesRightKey key){
+        return repo.findById(key);
     }
 
     @GetMapping()

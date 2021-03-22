@@ -16,8 +16,8 @@ public class EnterpriseController {
     EnterpriseRepo repo;
 
     @GetMapping("/{id}")
-    public Enterprise getEnterprise(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Enterprise> getEnterprise(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

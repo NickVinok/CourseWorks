@@ -6,8 +6,9 @@ import lombok.Data;
 
 @Data
 public class CalculationStartRequest {
-    private String login;
+    private String user;
     private Enterprise enterprise;
+    private Department department;
     private EquipmentInDepartment equipmentInDepartment;
     private Event event;
     private DestructionType destructionType;

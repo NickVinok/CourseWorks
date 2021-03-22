@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubstanceRepo extends JpaRepository<Substance, Long> {
+    Substance findByName(String name);
 }

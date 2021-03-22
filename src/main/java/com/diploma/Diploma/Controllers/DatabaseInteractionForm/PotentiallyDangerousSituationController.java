@@ -16,8 +16,8 @@ public class  PotentiallyDangerousSituationController {
     PotentiallyDangerousSituationRepo repo;
 
     @GetMapping("/{id}")
-    public PotentiallyDangerousSituation getPotentiallyDangerousSituation(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<PotentiallyDangerousSituation> getPotentiallyDangerousSituation(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

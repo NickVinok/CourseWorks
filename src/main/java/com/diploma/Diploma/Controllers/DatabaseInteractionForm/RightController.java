@@ -16,8 +16,8 @@ public class RightController {
     RightRepo repo;
 
     @GetMapping("/{id}")
-    public Rights getRight(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Rights> getRight(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

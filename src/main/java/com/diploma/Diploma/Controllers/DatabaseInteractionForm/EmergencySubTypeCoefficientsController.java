@@ -17,8 +17,8 @@ public class EmergencySubTypeCoefficientsController {
     EmergencySubTypeCoefficientsRepo repo;
 
     @PostMapping("/get")
-    public EmergencySubTypeCoefficients getEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficientsKey key){
-        return repo.findById(key).get();
+    public Optional<EmergencySubTypeCoefficients> getEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficientsKey key){
+        return repo.findById(key);
     }
 
     @GetMapping()

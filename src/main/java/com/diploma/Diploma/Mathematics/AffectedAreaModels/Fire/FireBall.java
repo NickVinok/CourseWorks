@@ -8,7 +8,6 @@ import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
 import com.diploma.Diploma.Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -30,22 +29,20 @@ public class FireBall implements BaseFireModel {
     @Override
     public void calculate(Substance substance, Amount amount, Department department, Coefficients coefficients,
                           Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
-        double fireballEffectiveDiameter = 6.48 * Math.pow(amount.getMass(), 0.325);
+        double fireballEffectiveDiameter = 6.48 * Math.pow(amount.getQuantityOfLiquidEscapingReservoir(), 0.325);
         double H = fireballEffectiveDiameter;
-
+        this.thermalRadiationIntensity = new ArrayList<>();
         for(Double r: amount.getRadiusArray()){
             double root = Math.pow(r, 2) + Math.pow(H, 2);
 
-            double irradianceAngleCoefficient = Math.pow(fireballEffectiveDiameter, 2)
-                    /
-                    4*(root);
-            double atmosphericTransmissionCoefficient = Math.exp((-7.0) / 10000
-            * (Math.sqrt(root)-fireballEffectiveDiameter/2));
+            double irradianceAngleCoefficient = Math.pow(fireballEffectiveDiameter, 2) / (4 * root);
+            double atmosphericTransmissionCoefficient = Math.pow(Math.E, (7*Math.pow(10, -4)
+            * (Math.sqrt(root)-fireballEffectiveDiameter/2)));
 
             thermalRadiationIntensity.add(irradianceAngleCoefficient*atmosphericTransmissionCoefficient*coefficients.getMeanThermalRadiationIntensity());
         }
-        expositionTime =  0.92 * Math.pow(amount.getMass(), 0.303);
-        fireballExistenceTime = 0.852*Math.pow(amount.getMass(),0.26);
+        expositionTime =  0.92 * Math.pow(amount.getQuantityOfLiquidEscapingReservoir(), 0.303);
+        fireballExistenceTime = 0.852*Math.pow(amount.getQuantityOfLiquidEscapingReservoir(),0.26);
     }
 
     @Override

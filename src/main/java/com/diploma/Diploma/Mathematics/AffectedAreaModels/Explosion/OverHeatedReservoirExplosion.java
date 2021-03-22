@@ -8,7 +8,6 @@ import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
 import com.diploma.Diploma.Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -35,7 +34,7 @@ public class OverHeatedReservoirExplosion implements BaseExplosionModel {
     public void calculate(Substance substance, Amount amount, Department department, Coefficients coefficients,
                           Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
 
-        double explosionEfficientEnergy=coefficients.getPressureWaveEnergy()*substance.getSpecificHeat()*amount.getMass()
+        double explosionEfficientEnergy=coefficients.getPressureWaveEnergy()*substance.getSpecificHeat()*amount.getVapourMass()
                 *(calculationVariableParameters.getLiquidTemperature()-substance.getBoilingTemperature());
                 //Если есть предохранительное устройство, то температуру жижкости мы расчитываем по другой формуле
         double mpr = (explosionEfficientEnergy/4.52)/1000000;

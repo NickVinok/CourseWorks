@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @Entity
@@ -17,7 +18,8 @@ public class Calculation {
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
-    private Timestamp time;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date time;
     private double collectiveRisk;
     private double matterConsumption;
     private double matterQuantity;

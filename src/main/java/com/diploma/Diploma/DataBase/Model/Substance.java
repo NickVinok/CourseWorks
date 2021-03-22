@@ -23,6 +23,9 @@ public class Substance {
     private double specificEvaporationHeat; //Удельная теплота испарения сжиженного газа при температуре кипения жидкости
     private double molarMass; //Молярная масса
     private double concentrationLimitMinimalValue; //Нижний концентрационный предел
+    private boolean isUnderlyingSurface;
+    private double heatTransitionCoefficient; //Коэффициент теплопроводности
+    private double underlyingSurfaceCoefficient;
 
     //TODO Нормально вставить декоратор от Hibernate и разобраться с OnDelete (Сделать двусторонюю связь)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

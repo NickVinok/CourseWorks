@@ -22,8 +22,9 @@ public class FlashFire implements BaseFlashModel {
                           Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
         //По-хорошему нужно поделить все вещества на горючие газы и легко воспламеняющиеся жидкости
         //Но так как это дополнительная морока и мы не работаем с гг, то оставляем формулу только под лвж
-
-        double rNKPR = 7.8 * Math.pow(amount.getMass()/(substance.getFuelVapourDensity()*substance.getConcentrationLimitMinimalValue()),0.33);
+        double vapourDensity = substance.getMolarMass()/
+                (22.413* (1+0.00367*calculationVariableParameters.getCurrentTemperature()) );
+        double rNKPR = 7.8 * Math.pow(amount.getVapourMass()/(vapourDensity*substance.getConcentrationLimitMinimalValue()),0.33);
         this.radius = 1.2 * rNKPR;
     }
 
@@ -32,7 +33,7 @@ public class FlashFire implements BaseFlashModel {
         probitFunctionValue = new ArrayList<>();
         for(Double radius: radiusArray){
             if(radius<=this.radius){
-                probitFunctionValue.add(1d);
+                probitFunctionValue.add(100d);
             }
             else {
                 probitFunctionValue.add(0d);

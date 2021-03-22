@@ -1,12 +1,11 @@
 package com.diploma.Diploma.DataBase.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.security.Timestamp;
+import java.util.Date;
 
 @Data
 @Entity
@@ -17,8 +16,10 @@ public class EquipmentInDepartment {
     private long id;
 
     private double fullnessPercent;
-    private Timestamp storageStartDate;
-    private Timestamp storageEndDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date storageStartDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date storageEndDate;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "equipmentClassId", referencedColumnName = "id")
@@ -32,5 +33,6 @@ public class EquipmentInDepartment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "substanceId", referencedColumnName = "id")
+    @Nullable
     private Substance substance;
 }

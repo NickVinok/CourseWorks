@@ -16,8 +16,8 @@ public class ZoneController {
     ZoneRepo repo;
 
     @GetMapping("/{id}")
-    public Zone getZone(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Zone> getZone(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

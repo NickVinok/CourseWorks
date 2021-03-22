@@ -16,8 +16,8 @@ public class RoleController {
     RoleRepo repo;
 
     @GetMapping("/{id}")
-    public Role getRole(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Role> getRole(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

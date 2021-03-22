@@ -16,8 +16,8 @@ public class EquipmentInDepartmentController {
     EquipmentInDepartmentRepo repo;
 
     @GetMapping("/{id}")
-    public EquipmentInDepartment getEquipmentInDepartment(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<EquipmentInDepartment> getEquipmentInDepartment(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

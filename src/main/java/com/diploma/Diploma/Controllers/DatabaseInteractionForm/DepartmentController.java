@@ -16,8 +16,8 @@ public class DepartmentController {
     DepartmentRepo repo;
 
     @GetMapping("/{id}")
-    public Department getDepartment(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Department> getDepartment(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

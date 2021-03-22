@@ -16,8 +16,8 @@ public class TerritoryController {
     TerritoryRepo repo;
 
     @GetMapping("/{id}")
-    public Territory getTerritory(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Territory> getTerritory(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

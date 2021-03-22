@@ -7,7 +7,6 @@ import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
 import com.diploma.Diploma.Mathematics.MatterAmountCalculation.Amount;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -37,9 +36,10 @@ public class VaporExplosion implements BaseExplosionModel {
                           Enterprise enterprise, CalculationVariableParameters calculationVariableParameters, CloudCombustionModeRepo ccmr) {
         this.cloudCombustionModeRepo = ccmr;
         //Считаем эффективный энергозапас горючей смеси
-        double E = amount.getMass() //масса горючего вещества, участвующего в облаке
+        double E = amount.getVapourMass() //масса горючего вещества, участвующего в облаке
                 *coefficients.getSubstanceParticipationInExplosion() //коэффициент участия гор.вещ. во взрыве
-                *(substance.getSpecificBurnoutRate()*1000); //удельная теплота сгорания парогазовой среды в Дж/кг
+                *substance.getSpecificBurnoutRate()*1000 //удельная теплота сгорания парогазовой среды в Дж/кг
+                *2; //Тупо из примера) Хотим, чтобы было в Дж, поэтому умнржаем на тысячу
 
         //TODO брать значение из пришедшего запроса/базы
         double C0 = coefficients.getSpeedOfSound();
@@ -51,30 +51,55 @@ public class VaporExplosion implements BaseExplosionModel {
         CloudCombustionMode ccm = cloudCombustionModeRepo.findById(key).get();
 
         if(ccm.getFlameFrontSpeed()==0){
-            Vr=Math.pow(ccm.getK()*amount.getMass(), 1/6f);
+            Vr=Math.pow(ccm.getK()*amount.getVapourMass(), 1/6f);
         } else {
             Vr=ccm.getFlameFrontSpeed();
         }
+        //две временные константы для проверки
+        E = 1332858d*1000000;
+        Vr = 300d;
+        double sigma = coefficients.getCombustionProductExpansionDegree();
 
         ArrayList<Double> unitlessDistance = new ArrayList<>();
-        
-        for(Double dist: amount.getRadiusArray()){
-            unitlessDistance.add(dist/
-                    (Math.pow(E/ calculationVariableParameters.getAtmosphericPressure(), 0.33)));
+        //В случае дефлагарации пылевоздушного облака величина эффективного энергозапаса умножается на коэффициент sigma
+        if(ccm.getClassificationNumber()!=1){
+            E*=(sigma-1)/sigma;
         }
+        for(Double dist: amount.getRadiusArray()){
+            double uDist = dist/
+                    (Math.pow(E/calculationVariableParameters.getAtmosphericPressure(), 1/3f));
+            if(uDist<0.34){
+                unitlessDistance.add(0.34);
+            } else{
+                unitlessDistance.add(uDist);
+            }
+        }
+
         this.excessPressure = new ArrayList<>();
         this.impulse = new ArrayList<>();
         for(Double dist : unitlessDistance){
-            double unitlessPressure = Math.pow(Vr/C0,2)
-                    *((coefficients.getCombustionProductExpansionDegree()-1)/coefficients.getCombustionProductExpansionDegree()) //TODO ВОЗМОЖНО СТОИТ ЗАНЕСТИ В ОТДУЛЬНУЮ ПЕРЕМЕННУЮ
-                    *(0.83/dist-0.14/Math.pow(dist,2));
-            double unitlessImpulse = Vr/C0*((coefficients.getCombustionProductExpansionDegree()-1)/coefficients.getCombustionProductExpansionDegree())
-                    *(1-0.4*(coefficients.getCombustionProductExpansionDegree()-1)*Vr/(coefficients.getCombustionProductExpansionDegree()*C0))
-                    *(0.06/dist + 0.01/Math.pow(dist,2) + 0.0025/Math.pow(dist,3));
-
-            double pressure=unitlessPressure* calculationVariableParameters.getAtmosphericPressure();
-            double unitImpulse=unitlessImpulse*Math.pow(calculationVariableParameters.getAtmosphericPressure(),2/3f)*Math.pow(E,1/3f)/C0;
-
+            double unitlessPressure;
+            double unitlessImpulse;
+            if(ccm.getClassificationNumber()==1) {
+                unitlessPressure = Math.pow(Math.E,
+                        -1.124-1.66*(Math.log(dist)+0.26*Math.pow(Math.log(dist), 2))
+                        );
+                unitlessImpulse = Math.pow(Math.E,
+                        -3.412 - 0.898*(Math.log(dist)-0.0096*Math.pow(Math.log(dist), 2))
+                        );
+            } else{
+                unitlessPressure =
+                        Math.pow(Vr / C0, 2)
+                                * ((sigma - 1) / sigma)
+                                * (0.83 / dist - 0.14 / Math.pow(dist, 2));
+                double tmp = Vr / C0 * (sigma - 1) / sigma;
+                unitlessImpulse =
+                                tmp
+                                * (1 - 0.4 * tmp)
+                                * (0.06 / dist + 0.01 / Math.pow(dist, 2) - 0.0025 / Math.pow(dist, 3));
+            }
+            double pressure = unitlessPressure * calculationVariableParameters.getAtmosphericPressure();
+            double unitImpulse = unitlessImpulse * Math.pow(calculationVariableParameters.getAtmosphericPressure(), 2/3f) * Math.pow(E, 1/3f) / C0;
             this.excessPressure.add(pressure);
             this.impulse.add(unitImpulse);
         }
@@ -85,7 +110,7 @@ public class VaporExplosion implements BaseExplosionModel {
         probitFunctionValue = new ArrayList<>();
 
         for(int i =0; i<impulse.size();i++){
-            double V = Math.pow(17500/excessPressure.get(i), 8.4) + Math.pow(290/impulse.get(i), 9.3);
+            double V = Math.pow(17500/(excessPressure.get(i)/1000), 8.4) + Math.pow(290/impulse.get(i), 9.3);
             double value = 5 - 0.26*Math.log(V);
             probitFunctionValue.add(value);
         }

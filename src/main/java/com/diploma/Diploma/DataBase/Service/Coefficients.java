@@ -15,7 +15,7 @@ public class Coefficients {
     private double pressureWaveEnergy=0.5;
 
     //Относится к огненному шару
-    private double meanThermalRadiationIntensity = 350000;
+    private double meanThermalRadiationIntensity = 350; // КВт/м2
 
     //Относится к расчёту пожара пролива
     private double straitConcreteCoefficient=150;

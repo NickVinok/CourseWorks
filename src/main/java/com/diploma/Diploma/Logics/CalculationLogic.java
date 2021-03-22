@@ -45,6 +45,8 @@ public class CalculationLogic {
     private ExposureTypeRepo exposureTypeRepo;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private SubstanceRepo substanceRepo;
 
     @Autowired
     private Amount amount;
@@ -92,14 +94,15 @@ public class CalculationLogic {
                 .collect(Collectors.toList());
 
         List<BaseModel> mathModelsOfEmergencies = convertEmergenciesToMathModels(emergencies);
+        Substance underlyingSurface = substanceRepo.findByName(startData.getDepartment().getFloorType());
 
-        amount.calculate(equipmentClass, startData.getEquipmentInDepartment().getDepartment(), substance,
+        amount.calculate(equipmentClass, startData.getDepartment(), underlyingSurface, substance,
                 startData.getEquipmentInDepartment().getFullnessPercent()/100,startData.getCalculationVariableParameters());
 
         ProbitFunctionsToExposureProbability pf = new ProbitFunctionsToExposureProbability();
         List<List<Double>> exposureProbabilitiesForAllEmergencies = new ArrayList<>();
         for (BaseModel bm : mathModelsOfEmergencies) {
-            bm.calculate(substance, amount, startData.getEquipmentInDepartment().getDepartment(),
+            bm.calculate(substance, amount, startData.getDepartment(),
                     this.amount.getCoefficients(), startData.getEnterprise(), startData.getCalculationVariableParameters(), cloudCombustionModeRepo);
             exposureProbabilitiesForAllEmergencies.add(pf.convert(bm.getProbitFunctionValues(amount.getRadiusArray())));
         }
@@ -111,9 +114,8 @@ public class CalculationLogic {
 
         this.calc = new Calculation();
         calc.setTime(new Timestamp(System.currentTimeMillis()));
-        System.out.println(startData.getLogin());
-        calc.setUser(userRepo.findByLogin(startData.getLogin()).get());
-        calc.setMatterQuantity(amount.getMass());
+        calc.setUser(userRepo.findByLogin(startData.getUser()).get());
+        calc.setMatterQuantity(amount.getVapourMass());
         this.calc = calculationRepo.saveAndFlush(calc);
         //calc.setMatterConsumption(amount.getProductConsumption()); когда разберусь, когда этот параметр есть, а когда нет
 

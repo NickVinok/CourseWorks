@@ -16,8 +16,8 @@ public class EmergencySubTypeController {
     EmergencySubTypeRepo repo;
 
     @GetMapping("/{id}")
-    public EmergencySubType getEmergencySubType(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<EmergencySubType> getEmergencySubType(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

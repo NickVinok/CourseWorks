@@ -16,8 +16,8 @@ public class ExposureTypeController {
     ExposureTypeRepo repo;
 
     @GetMapping("/{id}")
-    public ExposureType getExposureType(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<ExposureType> getExposureType(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

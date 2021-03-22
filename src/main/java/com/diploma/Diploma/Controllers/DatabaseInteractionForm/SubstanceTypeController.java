@@ -16,8 +16,8 @@ public class SubstanceTypeController {
     SubstanceTypeRepo repo;
 
     @GetMapping("/{id}")
-    public SubstanceType getSubstanceType(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<SubstanceType> getSubstanceType(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

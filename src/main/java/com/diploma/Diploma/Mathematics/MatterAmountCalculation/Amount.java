@@ -3,7 +3,6 @@ package com.diploma.Diploma.Mathematics.MatterAmountCalculation;
 
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Model.EquipmentClass;
-import com.diploma.Diploma.DataBase.Model.EquipmentInDepartment;
 import com.diploma.Diploma.DataBase.Model.Substance;
 import com.diploma.Diploma.DataBase.Service.Coefficients;
 import com.diploma.Diploma.Utils.CalculationVariableParameters;
@@ -19,29 +18,30 @@ public class Amount {
     @Autowired
     private Coefficients coefficients;
 
-    private double time=1; //Время контакта жидкости с твёрдой поверхностью (оно константно или задаётся пользователем, или расчитывается)
-    private double mass;
+    private double vapourMass;
+    private double quantityOfLiquidEscapingReservoir;
     private double volume;
     private double productConsumption;
     private double evaporationTime=3600; //Ебануть в константы потом мб
     private ArrayList<Double> radiusArray;
 
 
-    public void calculate(EquipmentClass equipmentClass, Department dep, Substance substance,
+    public void calculate(EquipmentClass equipmentClass, Department dep,Substance underlyingSurface, Substance substance,
                           double fullnessPercent, CalculationVariableParameters input){
         this.radiusArray = generateRadiusArray();
 
-        double massCoefficient = fullnessPercent* equipmentClass.getVolume()*substance.getDensity();
+        double massCoefficient = fullnessPercent* equipmentClass.getVolume()*substance.getDensity(); //Обманчивое название, в методе - совершенно другое значение
         double quantityIB = quantityOfImmediatelyBoilingLiquidCalculation(massCoefficient, substance, input);
         double quantityLV = quantityOfLiquidInVaporFormCalculation(fullnessPercent, substance, equipmentClass, input);
-        double quantityLS = quantityOfLiquidSteamEvaporatingFromCane(substance, dep, input);
-        double quantityML = quantityOfMirrorLiquidEvaporating(substance, input, equipmentClass, fullnessPercent, dep);
+        double quantityLS = quantityOfLiquidSteamEvaporatingFromCane(underlyingSurface, substance,massCoefficient-quantityIB, dep, input);
+        double quantityML = quantityOfMirrorLiquidEvaporating(substance, underlyingSurface, input, equipmentClass, fullnessPercent, dep);
         System.out.println(quantityIB);
         System.out.println(quantityLV);
         System.out.println(quantityLS);
         System.out.println(quantityML);
-        this.mass = quantityIB+quantityLV+quantityLS+quantityML;
-        System.out.println(this.mass);
+        this.vapourMass = quantityIB+quantityLV+quantityLS+quantityML;
+        this.quantityOfLiquidEscapingReservoir = massCoefficient;
+        System.out.println(this.vapourMass);
 
         calculateProductConsumption(substance, equipmentClass,fullnessPercent, input);
     }
@@ -62,19 +62,24 @@ public class Amount {
         return firstPart*secondPart;
     }
 
-    private double quantityOfLiquidSteamEvaporatingFromCane(Substance substance, Department dep, CalculationVariableParameters input){
+    private double quantityOfLiquidSteamEvaporatingFromCane(Substance underlyingSurface, Substance substance, double subtraction,
+                                                            Department dep, CalculationVariableParameters input){
         if(input.getLiquidTemperature()<substance.getBoilingTemperature()){
             return 0;
         }
-        double heatTransitionCoefficient = Math.sqrt(substance.getSpecificEvaporationRate()
-                *substance.getSpecificEvaporationHeat()*substance.getDensity());
+        double heatTransitionCoefficient = Math.sqrt(underlyingSurface.getHeatTransitionCoefficient()
+                *underlyingSurface.getSpecificHeat()*underlyingSurface.getDensity());
         double firstPart = 2*(input.getCurrentTemperature()-substance.getBoilingTemperature())
                 /substance.getSpecificEvaporationHeat();
-        double secondPart =  heatTransitionCoefficient/Math.sqrt(Math.PI)*dep.getArea()*Math.sqrt(time);
+        double spillArea = underlyingSurface.getUnderlyingSurfaceCoefficient()*subtraction/substance.getDensity();
+        if(dep.getArea()<spillArea || dep.getArea()==0){
+            spillArea = dep.getArea();
+        }
+        double secondPart =  heatTransitionCoefficient/Math.sqrt(Math.PI)*spillArea*Math.sqrt(evaporationTime);
         return firstPart*secondPart;
     }
 
-    private double quantityOfMirrorLiquidEvaporating(Substance substance, CalculationVariableParameters input,
+    private double quantityOfMirrorLiquidEvaporating(Substance substance, Substance underlyingSurface, CalculationVariableParameters input,
                                                      EquipmentClass eqclass, double fullnessPercent, Department department){
         double firstPartSteamPressure = (1/(substance.getBoilingTemperature()+273)-1/(273+input.getLiquidTemperature()));
         double secondPartSteamPressure = (substance.getSpecificEvaporationHeat()*substance.getMolarMass()
@@ -83,12 +88,7 @@ public class Amount {
         double evaporationIntensity = (steamPressure/1000)*Math.sqrt(substance.getMolarMass())
                 *coefficients.getAirSpeedAndTemperatureCoefficient()*Math.pow(10, -6);
         //допускаем, что объём жидкости, поступившей в пространство равен объёму аппарата, на котором прошла разгерметизация
-        double floorCoefficient;
-        if (department.getFloorType().equals("concrete")) {
-            floorCoefficient = coefficients.getStraitConcreteCoefficient();
-        } else{
-            floorCoefficient = coefficients.getStraitPrimerCoatingCoefficient();
-        }
+        double floorCoefficient = underlyingSurface.getUnderlyingSurfaceCoefficient();
         double evaporationArea = eqclass.getVolume()*fullnessPercent*floorCoefficient;
         if(evaporationArea>department.getArea()) evaporationArea=department.getArea();
 
@@ -112,7 +112,7 @@ public class Amount {
     }
     public void nullify(){
         this.radiusArray = null;
-        this.mass = 0;
+        this.vapourMass = 0;
         this.productConsumption = 0;
         this.volume = 0;
     }

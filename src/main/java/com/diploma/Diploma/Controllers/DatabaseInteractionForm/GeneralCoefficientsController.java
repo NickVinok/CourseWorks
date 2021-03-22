@@ -16,8 +16,8 @@ public class GeneralCoefficientsController {
     GeneralCoefficientsRepo repo;
 
     @GetMapping("/{id}")
-    public GeneralCoefficients getGeneralCoefficient(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<GeneralCoefficients> getGeneralCoefficient(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()

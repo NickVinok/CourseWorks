@@ -16,8 +16,8 @@ public class EventController {
     EventRepo repo;
 
     @GetMapping("/{id}")
-    public Event getEvent(@PathVariable long id){
-        return repo.findById(id).get();
+    public Optional<Event> getEvent(@PathVariable long id){
+        return repo.findById(id);
     }
 
     @GetMapping()
