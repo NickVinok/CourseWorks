@@ -166,7 +166,7 @@ public class CalculationLogic {
                     impulseDamageCalculation.setProbitFunctionValue(probits.get(i));
                     impulseDamageCalculation.setProbability(exposureProbabilities.get(i));
                     impulseDamageCalculation.setPotentialRisk(potentialRisksForEmergencies.get(i));
-                    results.add(pressureDamageCalculation);
+                    results.add(impulseDamageCalculation);
                 }
             } else if (mathModelsOfEmergencies.get(j).getType().equals("Пожар")) {
                 List<ExposureType> heatExposures = exposureTypeRepo.findByEmergencyId(emergencies.get(j).getEmergency().getId());
