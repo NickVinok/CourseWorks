@@ -2,14 +2,10 @@ package com.diploma.Diploma.Controllers;
 
 import com.diploma.Diploma.Controllers.PesponseObjects.CalculationResponse.CalculationResponse;
 import com.diploma.Diploma.Controllers.RequsetObjects.CalculationRequest.CalculationStartRequest;
-import com.diploma.Diploma.DataBase.Model.EmergencySubTypeDamageCalculation;
-import com.diploma.Diploma.DataBase.Model.Enterprise;
 import com.diploma.Diploma.DataBase.Repo.EmergencySubTypeDamageCalculationRepo;
 import com.diploma.Diploma.Logics.CalculationLogic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/calculate")
@@ -24,11 +20,8 @@ public class CalculationResultController {
         calculationLogic.calculate(calculationStartRequest);
 
         CalculationResponse calculationResponse = new CalculationResponse();
-        calculationResponse.setEmergencies(calculationLogic.getResults());
-        /*for(EmergencySubTypeDamageCalculation c : calculationLogic.getResults()){
-            System.out.println(c);
-        }*/
-        emergencySubTypeDamageCalculationRepo.saveAll(calculationLogic.getResults());
+        calculationResponse.setEmergencies(calculationLogic.getResultsForClient());
+        emergencySubTypeDamageCalculationRepo.saveAll(calculationLogic.getResultsForDb());
         return calculationResponse;
     }
 }

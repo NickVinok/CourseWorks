@@ -110,7 +110,7 @@ public class VaporExplosion implements BaseExplosionModel {
         probitFunctionValue = new ArrayList<>();
 
         for(int i =0; i<impulse.size();i++){
-            double V = Math.pow(17500/(excessPressure.get(i)/1000), 8.4) + Math.pow(290/impulse.get(i), 9.3);
+            double V = Math.pow(17500/(excessPressure.get(i)), 8.4) + Math.pow(290/impulse.get(i), 9.3);
             double value = 5 - 0.26*Math.log(V);
             probitFunctionValue.add(value);
         }

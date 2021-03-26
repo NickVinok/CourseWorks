@@ -35,13 +35,13 @@ public class Amount {
         double quantityLV = quantityOfLiquidInVaporFormCalculation(fullnessPercent, substance, equipmentClass, input);
         double quantityLS = quantityOfLiquidSteamEvaporatingFromCane(underlyingSurface, substance,massCoefficient-quantityIB, dep, input);
         double quantityML = quantityOfMirrorLiquidEvaporating(substance, underlyingSurface, input, equipmentClass, fullnessPercent, dep);
-        System.out.println(quantityIB);
+        /*System.out.println(quantityIB);
         System.out.println(quantityLV);
         System.out.println(quantityLS);
-        System.out.println(quantityML);
+        System.out.println(quantityML);*/
         this.vapourMass = quantityIB+quantityLV+quantityLS+quantityML;
         this.quantityOfLiquidEscapingReservoir = massCoefficient;
-        System.out.println(this.vapourMass);
+        //System.out.println(this.vapourMass);
 
         calculateProductConsumption(substance, equipmentClass,fullnessPercent, input);
     }
