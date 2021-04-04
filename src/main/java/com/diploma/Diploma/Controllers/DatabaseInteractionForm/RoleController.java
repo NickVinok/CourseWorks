@@ -15,9 +15,9 @@ public class RoleController {
     @Autowired
     RoleRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Role> getRole(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Role> getRole(@RequestBody Role role){
+        return repo.findById(role.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class RoleController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Role newRole(@RequestBody Role role){
         return repo.save(role);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@RequestBody Role role, @PathVariable  long id){
-        Optional<Role> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Role> updateRole(@RequestBody Role role){
+        Optional<Role> tmp = repo.findById(role.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(role));
         } else{
@@ -40,8 +40,8 @@ public class RoleController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteRole(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteRole(@RequestBody Role role){
+        repo.deleteById(role.getId());
     }
 }

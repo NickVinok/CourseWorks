@@ -15,9 +15,9 @@ public class EquipmentInDepartmentController {
     @Autowired
     EquipmentInDepartmentRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<EquipmentInDepartment> getEquipmentInDepartment(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<EquipmentInDepartment> getEquipmentInDepartment(@RequestBody EquipmentInDepartment equipmentInDepartment){
+        return repo.findById(equipmentInDepartment.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EquipmentInDepartmentController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public EquipmentInDepartment newEquipmentInDepartment(@RequestBody EquipmentInDepartment equipmentInDepartment){
         return repo.save(equipmentInDepartment);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EquipmentInDepartment> updateEquipmentInDepartment(@RequestBody EquipmentInDepartment equipmentInDepartment, @PathVariable  long id){
-        Optional<EquipmentInDepartment> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<EquipmentInDepartment> updateEquipmentInDepartment(@RequestBody EquipmentInDepartment equipmentInDepartment){
+        Optional<EquipmentInDepartment> tmp = repo.findById(equipmentInDepartment.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(equipmentInDepartment));
         } else{
@@ -40,8 +40,8 @@ public class EquipmentInDepartmentController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEquipmentInDepartment(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteEquipmentInDepartment(@RequestBody EquipmentInDepartment equipmentInDepartment){
+        repo.deleteById(equipmentInDepartment.getId());
     }
 }

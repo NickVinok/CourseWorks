@@ -15,9 +15,9 @@ public class EventController {
     @Autowired
     EventRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Event> getEvent(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Event> getEvent(@RequestBody Event event){
+        return repo.findById(event.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EventController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Event newEvent(@RequestBody Event event){
         return repo.save(event);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@RequestBody Event event, @PathVariable  long id){
-        Optional<Event> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Event> updateEvent(@RequestBody Event event){
+        Optional<Event> tmp = repo.findById(event.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(event));
         } else{
@@ -40,8 +40,8 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteEvent(@RequestBody Event event){
+        repo.deleteById(event.getId());
     }
 }

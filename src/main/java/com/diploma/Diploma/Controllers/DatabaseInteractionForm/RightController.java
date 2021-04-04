@@ -15,9 +15,9 @@ public class RightController {
     @Autowired
     RightRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Rights> getRight(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Rights> getRight(@RequestBody Rights rights){
+        return repo.findById(rights.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class RightController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Rights newRight(@RequestBody Rights rights){
         return repo.save(rights);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Rights> updateRight(@RequestBody Rights rights, @PathVariable  long id){
-        Optional<Rights> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Rights> updateRight(@RequestBody Rights rights){
+        Optional<Rights> tmp = repo.findById(rights.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(rights));
         } else{
@@ -40,8 +40,8 @@ public class RightController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteRight(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteRight(@RequestBody Rights rights){
+        repo.deleteById(rights.getId());
     }
 }

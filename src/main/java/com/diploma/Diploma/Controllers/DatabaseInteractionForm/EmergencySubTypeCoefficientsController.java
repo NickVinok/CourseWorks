@@ -17,8 +17,8 @@ public class EmergencySubTypeCoefficientsController {
     EmergencySubTypeCoefficientsRepo repo;
 
     @PostMapping("/get")
-    public Optional<EmergencySubTypeCoefficients> getEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficientsKey key){
-        return repo.findById(key);
+    public Optional<EmergencySubTypeCoefficients> getEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergencySubTypeCoefficients){
+        return repo.findById(emergencySubTypeCoefficients.getEmergencySubTypeCoefficientsKey());
     }
 
     @GetMapping()
@@ -26,7 +26,7 @@ public class EmergencySubTypeCoefficientsController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public EmergencySubTypeCoefficients newEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergencySubTypeCoefficients){
         //System.out.println(emergencySubTypeCoefficients);
         return repo.save(emergencySubTypeCoefficients);
@@ -43,7 +43,7 @@ public class EmergencySubTypeCoefficientsController {
     }
 
     @DeleteMapping("/delete")
-    public void deleteEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficientsKey key){
-        repo.deleteById(key);
+    public void deleteEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergency){
+        repo.deleteById(emergency.getEmergencySubTypeCoefficientsKey());
     }
 }

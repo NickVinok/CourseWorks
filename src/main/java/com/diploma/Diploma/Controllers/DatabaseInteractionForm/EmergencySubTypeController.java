@@ -15,9 +15,9 @@ public class EmergencySubTypeController {
     @Autowired
     EmergencySubTypeRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<EmergencySubType> getEmergencySubType(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<EmergencySubType> getEmergencySubType(@RequestBody EmergencySubType emergency){
+        return repo.findById(emergency.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EmergencySubTypeController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public EmergencySubType newEmergencySubType(@RequestBody EmergencySubType emergency){
         return repo.save(emergency);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EmergencySubType> updateEmergencySubType(@RequestBody EmergencySubType emergency, @PathVariable  long id){
-        Optional<EmergencySubType> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<EmergencySubType> updateEmergencySubType(@RequestBody EmergencySubType emergency){
+        Optional<EmergencySubType> tmp = repo.findById(emergency.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(emergency));
         } else{
@@ -40,8 +40,8 @@ public class EmergencySubTypeController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEmergencySubType(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/{id}")
+    public void deleteEmergencySubType(@RequestBody EmergencySubType emergency){
+        repo.deleteById(emergency.getId());
     }
 }

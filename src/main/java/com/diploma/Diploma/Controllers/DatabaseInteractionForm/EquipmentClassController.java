@@ -15,9 +15,9 @@ public class EquipmentClassController {
     @Autowired
     EquipmentClassRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<EquipmentClass> getEquipmentClass(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<EquipmentClass> getEquipmentClass(@RequestBody EquipmentClass equipmentClass){
+        return repo.findById(equipmentClass.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EquipmentClassController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public EquipmentClass newEquipmentClass(@RequestBody EquipmentClass equipmentClass){
         return repo.save(equipmentClass);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EquipmentClass> updateEquipmentClass(@RequestBody EquipmentClass equipmentClass, @PathVariable  long id){
-        Optional<EquipmentClass> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<EquipmentClass> updateEquipmentClass(@RequestBody EquipmentClass equipmentClass){
+        Optional<EquipmentClass> tmp = repo.findById(equipmentClass.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(equipmentClass));
         } else{
@@ -40,8 +40,8 @@ public class EquipmentClassController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEquipmentClass(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteEquipmentClass(@RequestBody EquipmentClass equipmentClass){
+        repo.deleteById(equipmentClass.getId());
     }
 }

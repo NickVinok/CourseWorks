@@ -15,9 +15,9 @@ public class TerritoryController {
     @Autowired
     TerritoryRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Territory> getTerritory(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Territory> getTerritory(@RequestBody Territory territory){
+        return repo.findById(territory.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class TerritoryController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Territory newTerritory(@RequestBody Territory territory){
         return repo.save(territory);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Territory> updateTerritory(@RequestBody Territory territory, @PathVariable  long id){
-        Optional<com.diploma.Diploma.DataBase.Model.Territory> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Territory> updateTerritory(@RequestBody Territory territory){
+        Optional<Territory> tmp = repo.findById(territory.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(territory));
         } else{
@@ -40,8 +40,8 @@ public class TerritoryController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteTerritory(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteTerritory(@RequestBody Territory territory){
+        repo.deleteById(territory.getId());
     }
 }

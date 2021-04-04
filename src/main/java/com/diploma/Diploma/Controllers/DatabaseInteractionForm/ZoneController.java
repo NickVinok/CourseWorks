@@ -15,9 +15,9 @@ public class ZoneController {
     @Autowired
     ZoneRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Zone> getZone(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Zone> getZone(@RequestBody Zone zone){
+        return repo.findById(zone.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class ZoneController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/upgrade")
     public Zone newZone(@RequestBody Zone zone){
         return repo.save(zone);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Zone> updateZone(@RequestBody Zone zone, @PathVariable  long id){
-        Optional<Zone> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Zone> updateZone(@RequestBody Zone zone){
+        Optional<Zone> tmp = repo.findById(zone.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(zone));
         } else{
@@ -40,8 +40,8 @@ public class ZoneController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteZone(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteZone(@RequestBody Zone zone){
+        repo.deleteById(zone.getId());
     }
 }

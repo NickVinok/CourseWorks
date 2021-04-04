@@ -16,9 +16,9 @@ public class DestructionTypeController {
     @Autowired
     DestructionTypeRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<DestructionType> getDestructionType(@PathVariable long id){
-        return repo.findById(id);
+    @GetMapping("/get")
+    public Optional<DestructionType> getDestructionType(@RequestBody DestructionType destructionType){
+        return repo.findById(destructionType.getId());
     }
 
     @GetMapping()
@@ -26,14 +26,14 @@ public class DestructionTypeController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<DestructionType> newDestructionType(@RequestBody DestructionType destructionType){
         return ResponseEntity.ok(repo.save(destructionType));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DestructionType> updateDestructionType(@RequestBody DestructionType destructionType, @PathVariable  long id){
-        Optional<DestructionType> tmp = repo.findById(id);
+    @PutMapping("/update")
+    public ResponseEntity<DestructionType> updateDestructionType(@RequestBody DestructionType destructionType){
+        Optional<DestructionType> tmp = repo.findById(destructionType.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(destructionType));
         } else{
@@ -41,8 +41,8 @@ public class DestructionTypeController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteDestructionType(@PathVariable long id){
-        repo.deleteById(id);
+    @DeleteMapping("/delete")
+    public void deleteDestructionType(@RequestBody DestructionType destructionType){
+        repo.deleteById(destructionType.getId());
     }
 }

@@ -1,6 +1,7 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
 import com.diploma.Diploma.DataBase.Model.Coefficients;
+import com.diploma.Diploma.DataBase.Model.Keys.CloudCombustionModeKey;
 import com.diploma.Diploma.DataBase.Repo.CoefficientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,9 @@ public class CoefficientsController {
     @Autowired
     CoefficientsRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Coefficients> getCoefficient(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Coefficients> getCoefficient(@RequestBody Coefficients id){
+        return repo.findById(id.getId());
     }
 
     @GetMapping()
@@ -25,15 +26,14 @@ public class CoefficientsController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Coefficients> newCoefficient(@RequestBody Coefficients coefficients){
-        System.out.println(coefficients);
         return ResponseEntity.ok(repo.save(coefficients));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Coefficients> updateCoefficient(@RequestBody Coefficients coefficients, @PathVariable  long id){
-        Optional<Coefficients> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Coefficients> updateCoefficient(@RequestBody Coefficients coefficients){
+        Optional<Coefficients> tmp = repo.findById(coefficients.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(coefficients));
         } else{
@@ -41,8 +41,8 @@ public class CoefficientsController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteCoefficient(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteCoefficient(@RequestBody Coefficients id){
+        repo.deleteById(id.getId());
     }
 }

@@ -28,7 +28,7 @@ public class CloudCombustionModeController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<CloudCombustionMode> newCloudCombustionMode(@RequestBody CloudCombustionMode department){
         return ResponseEntity.ok(repo.save(department));
     }

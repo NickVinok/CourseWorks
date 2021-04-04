@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.Coefficients;
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Repo.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ public class DepartmentController {
     @Autowired
     DepartmentRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Department> getDepartment(@PathVariable long id){
-        return repo.findById(id);
+    @GetMapping("/get")
+    public Optional<Department> getDepartment(@RequestBody Department id){
+        return repo.findById(id.getId());
     }
 
     @GetMapping()
@@ -30,9 +31,9 @@ public class DepartmentController {
         return ResponseEntity.ok(repo.save(department));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Department> updateDepartment(@RequestBody Department department, @PathVariable  long id){
-         Optional<Department> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Department> updateDepartment(@RequestBody Department department){
+         Optional<Department> tmp = repo.findById(department.getId());
          if(tmp.isPresent()){
              return ResponseEntity.ok(repo.save(department));
          } else{
@@ -40,8 +41,8 @@ public class DepartmentController {
          }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteCDepartment(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteCDepartment(@RequestBody Department id){
+        repo.deleteById(id.getId());
     }
 }

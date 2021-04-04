@@ -15,9 +15,9 @@ public class EmergencyController {
     @Autowired
     EmergencyRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Emergency> getEmergency(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Emergency> getEmergency(@RequestBody Emergency emergency){
+        return repo.findById(emergency.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EmergencyController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Emergency newEmergency(@RequestBody Emergency emergency){
         return repo.save(emergency);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Emergency> updateEmergency(@RequestBody Emergency emergency, @PathVariable  long id){
-        Optional<Emergency> tmp = repo.findById(id);
+    @PutMapping("/update")
+    public ResponseEntity<Emergency> updateEmergency(@RequestBody Emergency emergency){
+        Optional<Emergency> tmp = repo.findById(emergency.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(emergency));
         } else{
@@ -40,9 +40,9 @@ public class EmergencyController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEmergency(@PathVariable long id){
-        repo.deleteById(id);
+    @DeleteMapping("/delete")
+    public void deleteEmergency(@RequestBody Emergency emergency){
+        repo.deleteById(emergency.getId());
     }
 }
 

@@ -15,9 +15,9 @@ public class EnterpriseController {
     @Autowired
     EnterpriseRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Enterprise> getEnterprise(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Enterprise> getEnterprise(@RequestBody Enterprise enterprise){
+        return repo.findById(enterprise.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class EnterpriseController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Enterprise newEnterprise(@RequestBody Enterprise enterprise){
         return repo.save(enterprise);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Enterprise> updateEnterprise(@RequestBody Enterprise enterprise, @PathVariable  long id){
-        Optional<Enterprise> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Enterprise> updateEnterprise(@RequestBody Enterprise enterprise){
+        Optional<Enterprise> tmp = repo.findById(enterprise.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(enterprise));
         } else{
@@ -40,8 +40,8 @@ public class EnterpriseController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEnterprise(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteEnterprise(@RequestBody Enterprise enterprise){
+        repo.deleteById(enterprise.getId());
     }
 }

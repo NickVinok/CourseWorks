@@ -15,9 +15,9 @@ public class UserController {
     @Autowired
     UserRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<User> getUser(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<User> getUser(@RequestBody User user){
+        return repo.findById(user.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class UserController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public User newUser(@RequestBody User user){
         return repo.save(user);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable  long id){
-        Optional<User> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestBody User user){
+        Optional<User> tmp = repo.findById(user.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(user));
         } else{
@@ -40,8 +40,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteUser(@RequestBody User user){
+        repo.deleteById(user.getId());
     }
 }

@@ -15,9 +15,9 @@ public class GeneralCoefficientsController {
     @Autowired
     GeneralCoefficientsRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<GeneralCoefficients> getGeneralCoefficient(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<GeneralCoefficients> getGeneralCoefficient(@RequestBody GeneralCoefficients generalCoefficients){
+        return repo.findById(generalCoefficients.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class GeneralCoefficientsController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public GeneralCoefficients newGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
         return repo.save(generalCoefficients);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<GeneralCoefficients> updateGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients, @PathVariable  long id){
-        Optional<GeneralCoefficients> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<GeneralCoefficients> updateGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
+        Optional<GeneralCoefficients> tmp = repo.findById(generalCoefficients.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(generalCoefficients));
         } else{
@@ -40,8 +40,8 @@ public class GeneralCoefficientsController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteGeneralCoefficients(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
+        repo.deleteById(generalCoefficients.getId());
     }
 }

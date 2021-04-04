@@ -17,8 +17,8 @@ public class RolesRightController {
     RolesRightRepo repo;
 
     @PostMapping("/get")
-    public Optional<RolesRight> getRolesRight(@RequestBody RolesRightKey key){
-        return repo.findById(key);
+    public Optional<RolesRight> getRolesRight(@RequestBody RolesRight rolesRight){
+        return repo.findById(rolesRight.getRolesRightKey());
     }
 
     @GetMapping()
@@ -32,7 +32,7 @@ public class RolesRightController {
         return repo.save(rolesRight);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<RolesRight> updateRolesRight(@RequestBody RolesRight rolesRight){
         Optional<com.diploma.Diploma.DataBase.Model.RolesRight> tmp = repo.findById(rolesRight.getRolesRightKey());
         if(tmp.isPresent()){
@@ -43,7 +43,7 @@ public class RolesRightController {
     }
 
     @PostMapping("/delete")
-    public void deleteRolesRight(@RequestBody RolesRightKey key){
-        repo.deleteById(key);
+    public void deleteRolesRight(@RequestBody RolesRight rolesRight){
+        repo.deleteById(rolesRight.getRolesRightKey());
     }
 }

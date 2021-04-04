@@ -27,7 +27,7 @@ public class EmergencyScenarioController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public EmergencyScenario newEmergencyScenario(@RequestBody EmergencyScenario emergencyScenario){
         return repo.save(emergencyScenario);
     }

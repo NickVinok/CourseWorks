@@ -15,9 +15,10 @@ public class  PotentiallyDangerousSituationController {
     @Autowired
     PotentiallyDangerousSituationRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<PotentiallyDangerousSituation> getPotentiallyDangerousSituation(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<PotentiallyDangerousSituation> getPotentiallyDangerousSituation(
+            @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
+        return repo.findById(potentiallyDangerousSituation.getId());
     }
 
     @GetMapping()
@@ -25,16 +26,16 @@ public class  PotentiallyDangerousSituationController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public PotentiallyDangerousSituation newPotentiallyDangerousSituation(
             @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
         return repo.save(potentiallyDangerousSituation);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PotentiallyDangerousSituation> updatePotentiallyDangerousSituation(@RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation,
-                                                                             @PathVariable  long id){
-        Optional<PotentiallyDangerousSituation> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<PotentiallyDangerousSituation> updatePotentiallyDangerousSituation(
+            @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
+        Optional<PotentiallyDangerousSituation> tmp = repo.findById(potentiallyDangerousSituation.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(potentiallyDangerousSituation));
         } else{
@@ -42,8 +43,10 @@ public class  PotentiallyDangerousSituationController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deletePotentiallyDangerousSituation(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deletePotentiallyDangerousSituation(
+            @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation
+    ){
+        repo.deleteById(potentiallyDangerousSituation.getId());
     }
 }

@@ -15,9 +15,9 @@ public class ExposureTypeController {
     @Autowired
     ExposureTypeRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<ExposureType> getExposureType(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<ExposureType> getExposureType(@RequestBody ExposureType exposureType){
+        return repo.findById(exposureType.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class ExposureTypeController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ExposureType newExposureType(@RequestBody ExposureType exposureType){
         return repo.save(exposureType);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ExposureType> updateExposureType(@RequestBody ExposureType exposureType, @PathVariable  long id){
-        Optional<ExposureType> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<ExposureType> updateExposureType(@RequestBody ExposureType exposureType){
+        Optional<ExposureType> tmp = repo.findById(exposureType.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(exposureType));
         } else{
@@ -40,8 +40,8 @@ public class ExposureTypeController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteExposureType(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteExposureType(@RequestBody ExposureType exposureType){
+        repo.deleteById(exposureType.getId());
     }
 }

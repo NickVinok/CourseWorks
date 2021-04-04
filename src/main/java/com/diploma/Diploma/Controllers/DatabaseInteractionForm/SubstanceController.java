@@ -15,9 +15,9 @@ public class SubstanceController {
     @Autowired
     SubstanceRepo repo;
 
-    @GetMapping("/{id}")
-    public Optional<Substance> getSubstance(@PathVariable long id){
-        return repo.findById(id);
+    @PostMapping("/get")
+    public Optional<Substance> getSubstance(@RequestBody Substance substance){
+        return repo.findById(substance.getId());
     }
 
     @GetMapping()
@@ -25,14 +25,14 @@ public class SubstanceController {
         return repo.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Substance newSubstance(@RequestBody Substance substance){
         return repo.save(substance);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Substance> updateSubstance(@RequestBody Substance substance, @PathVariable  long id){
-        Optional<com.diploma.Diploma.DataBase.Model.Substance> tmp = repo.findById(id);
+    @PostMapping("/update")
+    public ResponseEntity<Substance> updateSubstance(@RequestBody Substance substance){
+        Optional<com.diploma.Diploma.DataBase.Model.Substance> tmp = repo.findById(substance.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(substance));
         } else{
@@ -40,8 +40,8 @@ public class SubstanceController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteSubstance(@PathVariable long id){
-        repo.deleteById(id);
+    @PostMapping("/delete")
+    public void deleteSubstance(@RequestBody Substance substance){
+        repo.deleteById(substance.getId());
     }
 }
