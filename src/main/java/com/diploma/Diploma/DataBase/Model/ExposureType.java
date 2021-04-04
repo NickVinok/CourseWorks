@@ -17,4 +17,7 @@ public class ExposureType {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "emergencyId", referencedColumnName = "id")
     private Emergency emergency;
+
+    @Transient
+    private String objectType = "exposureType";
 }

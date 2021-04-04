@@ -14,4 +14,7 @@ public class EquipmentType {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String name;
+
+    @Transient
+    private String objectType = "equipmentType";
 }

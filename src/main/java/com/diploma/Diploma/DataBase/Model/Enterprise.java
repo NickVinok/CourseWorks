@@ -14,4 +14,7 @@ public class Enterprise {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private double area;
+
+    @Transient
+    private String objectType = "enterprise";
 }

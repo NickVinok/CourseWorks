@@ -30,4 +30,7 @@ public class EmergencyScenario {
     @MapsId("substanceTypeId")
     @JoinColumn(name = "substanceTypeId", referencedColumnName = "id")
     private SubstanceType substanceType;
+
+    @Transient
+    private String objectType = "emergencyScenario";
 }

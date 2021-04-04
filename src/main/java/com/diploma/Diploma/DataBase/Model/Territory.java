@@ -21,4 +21,7 @@ public class Territory {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "enterpriseId", referencedColumnName = "id")
     private Enterprise enterprise;
+
+    @Transient
+    private String objectType = "territory";
 }

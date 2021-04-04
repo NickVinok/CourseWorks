@@ -35,4 +35,7 @@ public class EquipmentInDepartment {
     @JoinColumn(name = "substanceId", referencedColumnName = "id")
     @Nullable
     private Substance substance;
+
+    @Transient
+    private String objectType = "equipmentInDepartment";
 }

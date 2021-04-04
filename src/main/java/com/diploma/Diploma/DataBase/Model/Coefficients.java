@@ -13,4 +13,7 @@ public class Coefficients {
     private long id;
     private String name;
     private String measurementUnit;
+
+    @Transient
+    private String objectType = "coefficients";
 }

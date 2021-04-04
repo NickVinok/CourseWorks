@@ -12,4 +12,7 @@ public class DestructionType {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private boolean isFull;
+
+    @Transient
+    private String objectType = "destructionType";
 }

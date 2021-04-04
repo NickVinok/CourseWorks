@@ -23,4 +23,7 @@ public class RiskInTerritoryCalculation {
     @MapsId("calculationId")
     @JoinColumn(name = "calculationId", referencedColumnName = "id")
     private Calculation calculation;
+
+    @Transient
+    private String objectType = "riskInTerritoryCalculation";
 }

@@ -31,4 +31,7 @@ public class Department {
     @JoinColumn(name = "enterpriseId", nullable = false)
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private Enterprise enterprise;
+
+    @Transient
+    private String objectType = "department";
 }

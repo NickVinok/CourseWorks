@@ -22,4 +22,7 @@ public class EquipmentClass {
     @JoinColumn(name = "equipmentTypeId", nullable = false, referencedColumnName = "id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private EquipmentType equipmentType;
+
+    @Transient
+    private String objectType = "equipmentClass";
 }

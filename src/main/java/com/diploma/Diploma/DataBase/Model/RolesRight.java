@@ -24,4 +24,7 @@ public class RolesRight {
     @MapsId("roleId")
     @JoinColumn(name = "roleId", referencedColumnName = "id")
     private Role role;
+
+    @Transient
+    private String objectType = "rolesRight";
 }

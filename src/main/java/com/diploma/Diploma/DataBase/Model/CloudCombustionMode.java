@@ -27,4 +27,7 @@ public class CloudCombustionMode {
     //коэффициент для расчёта скорости фронта при отсутсвии такого как константы
     private double k;
     private int classificationNumber;
+
+    @Transient
+    private String objectType = "cloudCombustionMode";
 }

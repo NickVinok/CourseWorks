@@ -12,4 +12,7 @@ public class ExplosionSensitivity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private int classificationNumber;
+
+    @Transient
+    private String objectType = "explosionSensitivity";
 }

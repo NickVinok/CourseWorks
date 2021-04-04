@@ -31,4 +31,7 @@ public class EmergencySubTypeDamageCalculation {
     private double probability;
     private double value;
     private double potentialRisk;
+
+    @Transient
+    private String objectType = "emergencySubTypeDamageCalculation";
 }

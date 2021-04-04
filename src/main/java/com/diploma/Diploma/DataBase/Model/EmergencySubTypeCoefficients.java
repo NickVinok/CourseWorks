@@ -23,4 +23,7 @@ public class EmergencySubTypeCoefficients {
     @MapsId("emergencySubTypeId")
     @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
     private EmergencySubType emergencySubType;
+
+    @Transient
+    private String objectType = "emergencySubTypeCoefficients";
 }

@@ -15,4 +15,7 @@ public class GeneralCoefficients {
     @JoinColumn(name = "coefficientsId", referencedColumnName = "id")
     private Coefficients coefficients;
     private double value;
+
+    @Transient
+    private String objectType = "generalCoefficients";
 }

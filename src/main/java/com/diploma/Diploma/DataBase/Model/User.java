@@ -23,4 +23,7 @@ public class User {
     @JoinColumn(name = "roleId", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Role role;
+
+    @Transient
+    private String objectType = "user";
 }

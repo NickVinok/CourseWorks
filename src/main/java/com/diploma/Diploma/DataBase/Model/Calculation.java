@@ -23,4 +23,7 @@ public class Calculation {
     private double collectiveRisk;
     private double matterConsumption;
     private double matterQuantity;
+
+    @Transient
+    private String objectType = "calculation";
 }

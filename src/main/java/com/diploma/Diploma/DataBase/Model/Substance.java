@@ -37,4 +37,7 @@ public class Substance {
     @JoinColumn(name = "substanceTypeId", nullable = false)
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private SubstanceType substanceType;
+
+    @Transient
+    private String objectType = "substance";
 }

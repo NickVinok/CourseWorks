@@ -27,4 +27,7 @@ public class PotentiallyDangerousSituation {
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name = "destructionTypeId", referencedColumnName = "id")
     private DestructionType destructionType;
+
+    @Transient
+    private String objectType = "potentiallyDangerousSituation";
 }
