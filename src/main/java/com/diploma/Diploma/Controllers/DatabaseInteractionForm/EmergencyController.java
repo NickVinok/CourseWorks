@@ -30,7 +30,7 @@ public class EmergencyController {
         return repo.save(emergency);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<Emergency> updateEmergency(@RequestBody Emergency emergency){
         Optional<Emergency> tmp = repo.findById(emergency.getId());
         if(tmp.isPresent()){
@@ -40,7 +40,7 @@ public class EmergencyController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public void deleteEmergency(@RequestBody Emergency emergency){
         repo.deleteById(emergency.getId());
     }

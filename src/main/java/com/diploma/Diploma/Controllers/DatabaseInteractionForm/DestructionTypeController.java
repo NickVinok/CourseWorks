@@ -31,7 +31,7 @@ public class DestructionTypeController {
         return ResponseEntity.ok(repo.save(destructionType));
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<DestructionType> updateDestructionType(@RequestBody DestructionType destructionType){
         Optional<DestructionType> tmp = repo.findById(destructionType.getId());
         if(tmp.isPresent()){
@@ -41,7 +41,7 @@ public class DestructionTypeController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public void deleteDestructionType(@RequestBody DestructionType destructionType){
         repo.deleteById(destructionType.getId());
     }

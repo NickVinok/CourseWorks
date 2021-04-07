@@ -32,7 +32,7 @@ public class EmergencySubTypeCoefficientsController {
         return repo.save(emergencySubTypeCoefficients);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<EmergencySubTypeCoefficients> updateEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergency){
         Optional<EmergencySubTypeCoefficients> tmp = repo.findById(emergency.getEmergencySubTypeCoefficientsKey());
         if(tmp.isPresent()){
@@ -42,7 +42,7 @@ public class EmergencySubTypeCoefficientsController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public void deleteEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergency){
         repo.deleteById(emergency.getEmergencySubTypeCoefficientsKey());
     }

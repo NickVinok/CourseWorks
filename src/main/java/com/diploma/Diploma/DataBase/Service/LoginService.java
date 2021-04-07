@@ -14,10 +14,13 @@ import java.util.Optional;
 public class LoginService {
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private HashService hashService;
 
     public LoginResponse isUserAllowed(String login, String password){
         LoginResponse response = new LoginResponse();
         Optional<User> user = userRepo.findByLogin(login);
+
         //Если такой пользователь не существует
         if(user.isEmpty()) {
             response.setPresent(false);
@@ -26,8 +29,13 @@ public class LoginService {
         else {
             response.setPresent(true);
             //Если пароль соответсвует логину
-            System.out.println(user);
-            if (user.get().getPassword().equals(password)){
+            String hashedPass;
+            try {
+                hashedPass = hashService.encode(password);
+            }catch (Exception e){
+                hashedPass = password;
+            }
+            if(user.get().getPassword().equals(hashedPass)){
                 response.setPasswordCorrect(true);
                 //Если роль пользователя - админ
                 if(user.get().getRole().getName().equals("enterpriseAdmin")){
