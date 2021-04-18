@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EmergencyScenario;
 import com.diploma.Diploma.DataBase.Model.Keys.EmergencyScenarioKey;
 import com.diploma.Diploma.DataBase.Repo.EmergencyScenarioRepo;
@@ -25,6 +26,11 @@ public class EmergencyScenarioController {
     @GetMapping()
     public List<EmergencyScenario> getEmergencyScenarios(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public EmergencyScenario getNewEmergencyScenario(){
+        return new EmergencyScenario();
     }
 
     @PostMapping("/create")

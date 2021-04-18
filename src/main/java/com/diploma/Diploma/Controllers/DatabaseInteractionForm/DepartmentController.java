@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Coefficients;
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Repo.DepartmentRepo;
@@ -24,6 +25,11 @@ public class DepartmentController {
     @GetMapping()
     public List<Department> getDepartments(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Department getNewDepartment(){
+        return new Department();
     }
 
     @PostMapping

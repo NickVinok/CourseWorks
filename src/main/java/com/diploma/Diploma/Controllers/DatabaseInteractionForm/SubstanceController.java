@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Substance;
 import com.diploma.Diploma.DataBase.Repo.SubstanceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class SubstanceController {
     @GetMapping()
     public List<Substance> getSubstance(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Substance getNewSubstance(){
+        return new Substance();
     }
 
     @PostMapping("/create")

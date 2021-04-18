@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EquipmentType;
 import com.diploma.Diploma.DataBase.Repo.EquipmentTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class EquipmentTypeController {
     @GetMapping()
     public List<EquipmentType> getEquipmentType(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public EquipmentType getNewEquipmentType(){
+        return new EquipmentType();
     }
 
     @PostMapping("/create")

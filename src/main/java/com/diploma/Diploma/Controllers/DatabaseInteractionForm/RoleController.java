@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Role;
 import com.diploma.Diploma.DataBase.Repo.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class RoleController {
     @GetMapping()
     public List<Role> getRole(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Role getNewRole(){
+        return new Role();
     }
 
     @PostMapping("/create")

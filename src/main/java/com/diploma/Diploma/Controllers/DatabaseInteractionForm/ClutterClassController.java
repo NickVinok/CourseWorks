@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.ClutterClass;
 import com.diploma.Diploma.DataBase.Model.Event;
 import com.diploma.Diploma.DataBase.Repo.ClutterClassRepo;
@@ -25,6 +26,11 @@ public class ClutterClassController {
     @GetMapping()
     public List<ClutterClass> getEvent(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public ClutterClass getNewClutterClass(){
+        return new ClutterClass();
     }
 
     @PostMapping("/create")

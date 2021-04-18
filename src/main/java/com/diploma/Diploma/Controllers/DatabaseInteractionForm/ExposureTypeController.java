@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.ExposureType;
 import com.diploma.Diploma.DataBase.Repo.ExposureTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class ExposureTypeController {
     @GetMapping()
     public List<ExposureType> getExposureType(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public ExposureType getNewExposureType(){
+        return new ExposureType();
     }
 
     @PostMapping("/create")

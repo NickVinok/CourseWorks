@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Zone;
 import com.diploma.Diploma.DataBase.Repo.ZoneRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class ZoneController {
     @GetMapping()
     public List<Zone> getZone(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Zone getNewZone(){
+        return new Zone();
     }
 
     @PostMapping("/upgrade")

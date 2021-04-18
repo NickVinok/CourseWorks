@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Coefficients;
 import com.diploma.Diploma.DataBase.Model.Keys.CloudCombustionModeKey;
 import com.diploma.Diploma.DataBase.Repo.CoefficientsRepo;
@@ -24,6 +25,11 @@ public class CoefficientsController {
     @GetMapping()
     public List<Coefficients> getCoefficients(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Coefficients getNewCoefficients(){
+        return new Coefficients();
     }
 
     @PostMapping("/create")

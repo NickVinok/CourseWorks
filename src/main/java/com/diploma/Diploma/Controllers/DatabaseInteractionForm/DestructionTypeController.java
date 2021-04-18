@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Model.DestructionType;
 import com.diploma.Diploma.DataBase.Repo.DestructionTypeRepo;
@@ -24,6 +25,11 @@ public class DestructionTypeController {
     @GetMapping()
     public List<DestructionType> getDestructionType(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public DestructionType getNewDestructionType(){
+        return new DestructionType();
     }
 
     @PostMapping("/create")

@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Event;
 import com.diploma.Diploma.DataBase.Model.ExplosionSensitivity;
 import com.diploma.Diploma.DataBase.Repo.EventRepo;
@@ -25,6 +26,11 @@ public class ExplosionSensitivityController {
     @GetMapping()
     public List<ExplosionSensitivity> getEvent(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public ExplosionSensitivity getNewExplosionSensitivity(){
+        return new ExplosionSensitivity();
     }
 
     @PostMapping("/create")

@@ -1,5 +1,7 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
+import com.diploma.Diploma.DataBase.Model.Territory;
 import com.diploma.Diploma.DataBase.Model.User;
 import com.diploma.Diploma.DataBase.Repo.UserRepo;
 import com.diploma.Diploma.DataBase.Service.UserService;
@@ -26,6 +28,11 @@ public class UserController {
     @GetMapping()
     public List<User> getUser(){
         return userService.GetAllUsers();
+    }
+
+    @GetMapping("/getNew")
+    public Territory getNewTerritory(){
+        return new Territory();
     }
 
     @PostMapping("/create")

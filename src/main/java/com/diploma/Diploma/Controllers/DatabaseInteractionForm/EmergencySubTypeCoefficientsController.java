@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EmergencySubTypeCoefficients;
 import com.diploma.Diploma.DataBase.Model.Keys.EmergencySubTypeCoefficientsKey;
 import com.diploma.Diploma.DataBase.Repo.EmergencySubTypeCoefficientsRepo;
@@ -24,6 +25,11 @@ public class EmergencySubTypeCoefficientsController {
     @GetMapping()
     public List<EmergencySubTypeCoefficients> getEmergencySubTypeCoefficients(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public EmergencySubTypeCoefficients getNewEmergencySubTypeCoefficients(){
+        return new EmergencySubTypeCoefficients();
     }
 
     @PostMapping("/create")

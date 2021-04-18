@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.GeneralCoefficients;
 import com.diploma.Diploma.DataBase.Repo.GeneralCoefficientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class GeneralCoefficientsController {
     @GetMapping()
     public List<GeneralCoefficients> getGeneralCoefficients(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public GeneralCoefficients getNewGeneralCoefficients(){
+        return new GeneralCoefficients();
     }
 
     @PostMapping("/create")

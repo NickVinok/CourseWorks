@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Territory;
 import com.diploma.Diploma.DataBase.Repo.TerritoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class TerritoryController {
     @GetMapping()
     public List<Territory> getTerritory(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Territory getNewTerritory(){
+        return new Territory();
     }
 
     @PostMapping("/create")

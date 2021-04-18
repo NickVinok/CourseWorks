@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Rights;
 import com.diploma.Diploma.DataBase.Repo.RightRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class RightController {
     @GetMapping()
     public List<Rights> getRight(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Rights getNewRights(){
+        return new Rights();
     }
 
     @PostMapping("/create")

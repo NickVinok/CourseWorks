@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Keys.RolesRightKey;
 import com.diploma.Diploma.DataBase.Model.RolesRight;
 import com.diploma.Diploma.DataBase.Repo.RolesRightRepo;
@@ -24,6 +25,11 @@ public class RolesRightController {
     @GetMapping()
     public List<RolesRight> getRolesRight(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public RolesRight getNewRolesRight(){
+        return new RolesRight();
     }
 
     @PostMapping

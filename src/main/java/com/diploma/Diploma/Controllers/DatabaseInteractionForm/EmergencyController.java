@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Emergency;
 import com.diploma.Diploma.DataBase.Repo.EmergencyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class EmergencyController {
     @GetMapping()
     public List<Emergency> getEmergencies(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Emergency getNewEmergency(){
+        return new Emergency();
     }
 
     @PostMapping("/create")

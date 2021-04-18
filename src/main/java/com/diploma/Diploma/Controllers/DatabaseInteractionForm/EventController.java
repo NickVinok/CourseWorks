@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Event;
 import com.diploma.Diploma.DataBase.Repo.EventRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class EventController {
     @GetMapping()
     public List<Event> getEvent(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public Event getNewEvent(){
+        return new Event();
     }
 
     @PostMapping("/create")

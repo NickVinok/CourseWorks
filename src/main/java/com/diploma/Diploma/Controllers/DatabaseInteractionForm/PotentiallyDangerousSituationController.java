@@ -1,5 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.PotentiallyDangerousSituation;
 import com.diploma.Diploma.DataBase.Repo.PotentiallyDangerousSituationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class  PotentiallyDangerousSituationController {
     @GetMapping()
     public List<PotentiallyDangerousSituation> getPotentiallyDangerousSituation(){
         return repo.findAll();
+    }
+
+    @GetMapping("/getNew")
+    public PotentiallyDangerousSituation getNewPotentiallyDangerousSituation(){
+        return new PotentiallyDangerousSituation();
     }
 
     @PostMapping("/create")
