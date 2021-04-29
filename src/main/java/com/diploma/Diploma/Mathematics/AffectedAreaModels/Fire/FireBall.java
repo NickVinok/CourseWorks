@@ -36,10 +36,12 @@ public class FireBall implements BaseFireModel {
             double root = Math.pow(r, 2) + Math.pow(H, 2);
 
             double irradianceAngleCoefficient = Math.pow(fireballEffectiveDiameter, 2) / (4 * root);
-            double atmosphericTransmissionCoefficient = Math.pow(Math.E, (7*Math.pow(10, -4)
-            * (Math.sqrt(root)-fireballEffectiveDiameter/2)));
 
-            thermalRadiationIntensity.add(irradianceAngleCoefficient*atmosphericTransmissionCoefficient*coefficients.getMeanThermalRadiationIntensity());
+            double atmosphericTransmissionCoefficient = Math.pow(Math.E, (-7*Math.pow(10, -4)
+            * (Math.sqrt(root)-fireballEffectiveDiameter/2)));
+            double intensity = irradianceAngleCoefficient*atmosphericTransmissionCoefficient*
+                    coefficients.getMeanThermalRadiationIntensity();
+            thermalRadiationIntensity.add(intensity);
         }
         expositionTime =  0.92 * Math.pow(amount.getQuantityOfLiquidEscapingReservoir(), 0.303);
         fireballExistenceTime = 0.852*Math.pow(amount.getQuantityOfLiquidEscapingReservoir(),0.26);
@@ -49,7 +51,7 @@ public class FireBall implements BaseFireModel {
     public ArrayList<Double> getProbitFunctionValues(ArrayList<Double> radiusArray) {
        probitFunctionValue = new ArrayList<>();
        for(Double intensity: this.thermalRadiationIntensity){
-            double value = -12.8 + 2.56*Math.log(expositionTime*Math.pow(intensity, 1.33));
+            double value = -12.8 + 2.56*Math.log(expositionTime*Math.pow(intensity, 4/3));
             probitFunctionValue.add(value);
        }
        return probitFunctionValue;

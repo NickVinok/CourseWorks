@@ -22,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,7 +65,7 @@ public class CalculationLogic {
                         startData.getEvent().getId(), destructionType.getId());
         PotentiallyDangerousSituation pds = null;
 
-        if(!destructionType.isFull()) {
+        if(!destructionType.getId()) {
             double maxDiameter = list.stream()
                     .map(PotentiallyDangerousSituation::getHoleDiameter)
                     .max(Double::compareTo)
@@ -85,17 +82,25 @@ public class CalculationLogic {
         } else {
             pds = list.get(0);
         }
-        //territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
+
         List<Territory> territoryList = territoryRepo.findByEnterpriseId(startData.getEnterprise().getId());
 
         emergencyService.getEmergencyRelatedData(equipmentClass.getEquipmentType().getId(), startData.getEvent().getId(),
                 substance.getSubstanceType().getId(), destructionType.getId());
 
-        List<EmergencySubType> emergencies = emergencyService.getEmergencyTree().stream()
-                .map(EmergencyScenario::getEmergencySubType)
+        List<EmergencyScenarioNode> emergencies = emergencyService.getEmergencyTree().stream()
+                .filter(EmergencyScenarioNode::isEndNode)
+                .filter(x -> x.getEmergencySubType()!=null)
                 .collect(Collectors.toList());
 
-        List<BaseModel> mathModelsOfEmergencies = convertEmergenciesToMathModels(emergencies);
+        List<Double> emergencyProbabilities = emergencies.stream()
+                .map(EmergencyScenarioNode::getProbability)
+                .collect(Collectors.toList());
+        List<EmergencySubType> emergencyObjects = emergencies.stream()
+                .map(EmergencyScenarioNode::getEmergencySubType)
+                .collect(Collectors.toList());
+
+        List<BaseModel> mathModelsOfEmergencies = convertEmergenciesToMathModels(emergencyObjects);
         Substance underlyingSurface = substanceRepo.findByName(startData.getDepartment().getFloorType());
 
         amount.calculate(equipmentClass, startData.getDepartment(), underlyingSurface, substance,
@@ -108,9 +113,9 @@ public class CalculationLogic {
                     this.amount.getCoefficients(), startData.getEnterprise(), startData.getCalculationVariableParameters(), cloudCombustionModeRepo);
             exposureProbabilitiesForAllEmergencies.add(pf.convert(bm.getProbitFunctionValues(amount.getRadiusArray())));
         }
+
         RiskCalculation rk = new RiskCalculation();
-        rk.calculate(pds.getDepressurizationFrequency(),
-                emergencyService.getEmergencyTree().stream().map(EmergencyScenario::getProbability).collect(Collectors.toList()),
+        rk.calculate(pds.getDepressurizationFrequency(), emergencyProbabilities,
                 exposureProbabilitiesForAllEmergencies, amount.getRadiusArray(), territoryList, startData.getEnterprise().getArea(),
                 startData.getCalculationVariableParameters().getNumberOfWorkers());
 
@@ -132,7 +137,7 @@ public class CalculationLogic {
         resultsForClient = new HashMap<>();
         for (int j = 0; j < emergencies.size(); j++) {
             if (mathModelsOfEmergencies.get(j).getType().equals("Взрыв")) {
-                List<ExposureType> explosionExposures = exposureTypeRepo.findByEmergencyId(emergencies.get(j).getEmergency().getId());
+                List<ExposureType> explosionExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
                 ArrayList<Double> tmpPressure = ((BaseExplosionModel) mathModelsOfEmergencies.get(j)).getExcessPressure();
                 ArrayList<Double> tmpImpulse = ((BaseExplosionModel) mathModelsOfEmergencies.get(j)).getImpulse();
                 ArrayList<Double> probits = mathModelsOfEmergencies.get(j).getProbitFunctionValues(amount.getRadiusArray());
@@ -154,7 +159,7 @@ public class CalculationLogic {
                             new DamagingExposureCalculationKey(calculationId, emergencyId, pressure.getId(), radiusKey);
                     EmergencySubTypeDamageCalculation pressureDamageCalculation = new EmergencySubTypeDamageCalculation();
                     pressureDamageCalculation.setCalculation(this.calc);
-                    pressureDamageCalculation.setEmergencySubType(emergencies.get(j));
+                    pressureDamageCalculation.setEmergencyScenarioNode(emergencies.get(j));
                     pressureDamageCalculation.setExposureType(pressure);
                     pressureDamageCalculation.setDamagingExposureCalculationKey(pressureCompositeKey);
                     pressureDamageCalculation.setValue(tmpPressure.get(i));
@@ -167,7 +172,7 @@ public class CalculationLogic {
                             new DamagingExposureCalculationKey(calculationId, emergencyId, impulse.getId(), radiusKey);
                     EmergencySubTypeDamageCalculation impulseDamageCalculation = new EmergencySubTypeDamageCalculation();
                     impulseDamageCalculation.setCalculation(this.calc);
-                    impulseDamageCalculation.setEmergencySubType(emergencies.get(j));
+                    impulseDamageCalculation.setEmergencyScenarioNode(emergencies.get(j));
                     impulseDamageCalculation.setExposureType(impulse);
                     impulseDamageCalculation.setDamagingExposureCalculationKey(impulseCompositeKey);
                     impulseDamageCalculation.setValue(tmpImpulse.get(i));
@@ -187,9 +192,9 @@ public class CalculationLogic {
                     explosionDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(explosionDamageForClient);
                 }
-                resultsForClient.put(emergencies.get(j).getName(), calculationResults);
+                resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else if (mathModelsOfEmergencies.get(j).getType().equals("Пожар")) {
-                List<ExposureType> heatExposures = exposureTypeRepo.findByEmergencyId(emergencies.get(j).getEmergency().getId());
+                List<ExposureType> heatExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
                 ArrayList<Double> tmpHeat = ((BaseFireModel) mathModelsOfEmergencies.get(j)).getThermalRadiationIntensty();
                 ArrayList<Double> probits = mathModelsOfEmergencies.get(j).getProbitFunctionValues(amount.getRadiusArray());
                 ArrayList<Double> potentialRisksForEmergencies = rk.getPotentialRiskForEmergencySubtypes().get(j);
@@ -207,7 +212,7 @@ public class CalculationLogic {
                             new DamagingExposureCalculationKey(calculationId, emergencyId, heat.getId(), radiusKey);
                     EmergencySubTypeDamageCalculation heatExposure = new EmergencySubTypeDamageCalculation();
                     heatExposure.setCalculation(this.calc);
-                    heatExposure.setEmergencySubType(emergencies.get(j));
+                    heatExposure.setEmergencyScenarioNode(emergencies.get(j));
                     heatExposure.setExposureType(heat);
                     heatExposure.setDamagingExposureCalculationKey(heatCompositeKey);
                     heatExposure.setValue(tmpHeat.get(i));
@@ -226,9 +231,9 @@ public class CalculationLogic {
                     heatDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(heatDamageForClient);
                 }
-                resultsForClient.put(emergencies.get(j).getName(), calculationResults);
+                resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else {
-                List<ExposureType> flashExposures = exposureTypeRepo.findByEmergencyId(emergencies.get(j).getEmergency().getId());
+                List<ExposureType> flashExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
                 ArrayList<Double> probits = mathModelsOfEmergencies.get(j).getProbitFunctionValues(amount.getRadiusArray());
                 ArrayList<Double> potentialRisksForEmergencies = rk.getPotentialRiskForEmergencySubtypes().get(j);
                 List<Double> exposureProbabilities = exposureProbabilitiesForAllEmergencies.get(j);
@@ -245,7 +250,7 @@ public class CalculationLogic {
                             new DamagingExposureCalculationKey(calculationId, emergencyId, flash.getId(), radiusKey);
                     EmergencySubTypeDamageCalculation flashExposure = new EmergencySubTypeDamageCalculation();
                     flashExposure.setCalculation(this.calc);
-                    flashExposure.setEmergencySubType(emergencies.get(j));
+                    flashExposure.setEmergencyScenarioNode(emergencies.get(j));
                     flashExposure.setExposureType(flash);
                     flashExposure.setDamagingExposureCalculationKey(flashCompositeKey);
                     flashExposure.setValue(-1);
@@ -263,7 +268,7 @@ public class CalculationLogic {
                     flashDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(flashDamageForClient);
                 }
-                resultsForClient.put(emergencies.get(j).getName(), calculationResults);
+                resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             }
         }
     }

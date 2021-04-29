@@ -41,7 +41,7 @@ public class StraightFire implements BaseFireModel {
                 (calculationVariableParameters.getCurrentTemperature() * coefficients.getUniversalGasConst());
 
         //Для простоты будем считать, что площадь пролива равна площади помещения, в котором произошёл пролив
-        double straitPane= department.getArea()/10;
+        double straitPane= department.getArea();
 
         double effectiveDiameter = Math.sqrt(4 * straitPane / Math.PI);
 

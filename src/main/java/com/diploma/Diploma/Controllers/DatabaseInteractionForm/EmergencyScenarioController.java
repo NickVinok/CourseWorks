@@ -1,8 +1,6 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
-import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EmergencyScenario;
-import com.diploma.Diploma.DataBase.Model.Keys.EmergencyScenarioKey;
 import com.diploma.Diploma.DataBase.Repo.EmergencyScenarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +16,9 @@ public class EmergencyScenarioController {
     EmergencyScenarioRepo repo;
 
     @PostMapping("/get")
-    public Optional<EmergencyScenario> getEmergencyScenario(@RequestBody EmergencyScenarioKey key){
+    public Optional<EmergencyScenario> getEmergencyScenario(@RequestBody EmergencyScenario es){
         //System.out.println(key);
-        return repo.findById(key);
+        return repo.findById(es.getId());
     }
 
     @GetMapping()
@@ -40,7 +38,7 @@ public class EmergencyScenarioController {
 
     @PostMapping("/update")
     public ResponseEntity<EmergencyScenario> updateEmergencyScenario(@RequestBody EmergencyScenario emergency){
-        Optional<EmergencyScenario> tmp = repo.findById(emergency.getEmergencyScenarioKey());
+        Optional<EmergencyScenario> tmp = repo.findById(emergency.getId());
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(emergency));
         } else{
@@ -49,7 +47,7 @@ public class EmergencyScenarioController {
     }
 
     @PostMapping("/delete")
-    public void deleteEmergencyScenario(@RequestBody EmergencyScenarioKey key){
-        repo.deleteById(key);
+    public void deleteEmergencyScenario(@RequestBody EmergencyScenario es){
+        repo.deleteById(es.getId());
     }
 }

@@ -1,6 +1,5 @@
 package com.diploma.Diploma.DataBase.Model;
 
-import com.diploma.Diploma.DataBase.Model.Keys.EmergencyScenarioKey;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,22 +8,21 @@ import javax.persistence.*;
 @Entity
 @Table(name = "emergencyScenario")
 public class EmergencyScenario {
-    @EmbeddedId
-    private EmergencyScenarioKey emergencyScenarioKey;
-    //TODO РАЗДЕЛИТЬ ЭТОТ КЛАСС, ТАК КАК КОНЕЧНЫЕ ТОЧКИ ДЕРЕВА И ТЕ, ЧТО В СЕРЕДИНЕ ОЗНАЧАЮТ, ЧТО EMERGENCYSUBTYPE МОЖЕТ БЫТЬ НУЛЕВЫМ
-    private double probability;
-    private boolean isEnd;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("destructionTypeId")
-    @JoinColumn(name = "destructionTypeId", referencedColumnName = "id")
+    @MapsId("isFullDestructionId")
+    @JoinColumn(name = "isFullDestructionId", referencedColumnName = "id")
     private DestructionType destructionType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("emergencySubTypeId")
-    @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
-    private EmergencySubType emergencySubType;
+    @MapsId("eventId")
+    @JoinColumn(name = "eventId", referencedColumnName = "id")
+    private Event event;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("substanceTypeId")

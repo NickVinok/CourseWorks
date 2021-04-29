@@ -25,7 +25,7 @@ public class PotentiallyDangerousSituation {
     private Event event;
 
     @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(name = "destructionTypeId", referencedColumnName = "id")
+    @JoinColumn(name = "isFullDestructionId", referencedColumnName = "id")
     private DestructionType destructionType;
 
     @Transient

@@ -81,11 +81,13 @@ public class Amount {
 
     private double quantityOfMirrorLiquidEvaporating(Substance substance, Substance underlyingSurface, CalculationVariableParameters input,
                                                      EquipmentClass eqclass, double fullnessPercent, Department department){
-        double firstPartSteamPressure = (1/(substance.getBoilingTemperature()+273)-1/(273+input.getLiquidTemperature()));
+        /*double firstPartSteamPressure = (1/(substance.getBoilingTemperature()+273)-1/(273+input.getLiquidTemperature()));
         double secondPartSteamPressure = (substance.getSpecificEvaporationHeat()*substance.getMolarMass()
                 /coefficients.getUniversalGasConst());
-        double steamPressure = input.getAtmosphericPressure()*Math.pow(Math.E, secondPartSteamPressure*firstPartSteamPressure);
-        double evaporationIntensity = (steamPressure/1000)*Math.sqrt(substance.getMolarMass())
+        double steamPressure = input.getAtmosphericPressure()*Math.pow(Math.E, secondPartSteamPressure*firstPartSteamPressure);*/
+        //Закомментировал, так как неуверен, что давление в W должно быть расчитано, а не принято равное атмосферному
+        //В методичке и приказе указана закомментированная формула
+        double evaporationIntensity = (/*steamPressure*/ input.getAtmosphericPressure()/1000)*Math.sqrt(substance.getMolarMass())
                 *coefficients.getAirSpeedAndTemperatureCoefficient()*Math.pow(10, -6);
         //допускаем, что объём жидкости, поступившей в пространство равен объёму аппарата, на котором прошла разгерметизация
         double floorCoefficient = underlyingSurface.getUnderlyingSurfaceCoefficient();

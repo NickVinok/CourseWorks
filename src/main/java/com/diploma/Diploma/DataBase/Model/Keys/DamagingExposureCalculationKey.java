@@ -13,16 +13,16 @@ import java.io.Serializable;
 public class DamagingExposureCalculationKey implements Serializable {
     @Column(name = "calculationId")
     private long calculation;
-    @Column(name = "emergencySubTypeId")
-    private long emergencySubTypeId;
+    @Column(name = "scenarioNodeId")
+    private long scenarioNodeId;
     @Column(name = "exposureTypeId")
     private long exposureType;
     @Column(name = "radius")
     private double radius;
 
-    public DamagingExposureCalculationKey(long calculation, long emergencySubTypeId, long exposureType, double radius){
+    public DamagingExposureCalculationKey(long calculation, long scenarioNodeId, long exposureType, double radius){
         this.calculation  = calculation;
-        this.emergencySubTypeId = emergencySubTypeId;
+        this.scenarioNodeId = scenarioNodeId;
         this.exposureType = exposureType;
         this.radius = radius;
     }

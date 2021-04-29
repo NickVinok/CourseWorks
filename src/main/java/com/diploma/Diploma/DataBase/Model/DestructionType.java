@@ -6,12 +6,11 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "destructionType")
+@Table(name = "isFullDestruction")
 public class DestructionType {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
-    private boolean isFull;
+    @Column(columnDefinition="tinyint(1)")
+    private Boolean id;
 
     @Transient
     private String objectType = "destructionType";

@@ -13,9 +13,9 @@ public class EmergencySubTypeDamageCalculation {
     private DamagingExposureCalculationKey damagingExposureCalculationKey;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("emergencySubTypeId")
-    @JoinColumn(name = "emergencySubTypeId", referencedColumnName = "id")
-    private EmergencySubType emergencySubType;
+    @MapsId("scenarioNodeId")
+    @JoinColumn(name = "scenarioNodeId", referencedColumnName = "id")
+    private EmergencyScenarioNode emergencyScenarioNode;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("calculationId")
