@@ -3,6 +3,7 @@ package com.diploma.Diploma.Logics;
 import com.diploma.Diploma.Controllers.RequsetObjects.CalculationRequest.CalculationStartRequest;
 import com.diploma.Diploma.DataBase.Model.*;
 import com.diploma.Diploma.DataBase.Model.Keys.DamagingExposureCalculationKey;
+import com.diploma.Diploma.DataBase.Model.Keys.RiskInTerritoryCalculationKey;
 import com.diploma.Diploma.DataBase.Repo.*;
 import com.diploma.Diploma.DataBase.Service.EmergencyService;
 import com.diploma.Diploma.Mathematics.AffectedAreaModels.BaseModel;
@@ -45,6 +46,10 @@ public class CalculationLogic {
     private UserRepo userRepo;
     @Autowired
     private SubstanceRepo substanceRepo;
+    @Autowired
+    private CalculationVariableParametersRepo cvpRepo;
+    @Autowired
+    private RiskInTerritoryRepo ritRepo;
 
     @Autowired
     private Amount amount;
@@ -54,7 +59,9 @@ public class CalculationLogic {
     private ArrayList<EmergencySubTypeDamageCalculation> resultsForDb;
     private HashMap<String, ArrayList<CalculationResults>> resultsForClient;
     private Calculation calc;
-
+    private HashMap<String, ArrayList<Double>> potentialRisks;
+    private ArrayList<RiskInTerritoryCalculation> avgIndividualRisk;
+    private double collectiveRisk;
 
     public void calculate(CalculationStartRequest startData) {
         Substance substance = startData.getEquipmentInDepartment().getSubstance();
@@ -123,7 +130,29 @@ public class CalculationLogic {
         calc.setTime(new Timestamp(System.currentTimeMillis()));
         calc.setUser(userRepo.findByLogin(startData.getUser()).get());
         calc.setMatterQuantity(amount.getVapourMass());
+        calc.setCollectiveRisk(rk.getCollectiveRisk());
         this.calc = calculationRepo.saveAndFlush(calc);
+
+        this.avgIndividualRisk = rk.getAvgIndividualRisk();
+        for(RiskInTerritoryCalculation rtc : avgIndividualRisk){
+            rtc.setCalculation(calc);
+            rtc.setRiskInTerritoryCalculationKey(new RiskInTerritoryCalculationKey(
+                    rtc.getTerritory().getId(),
+                    rtc.getCalculation().getId()
+            ));
+            ritRepo.saveAndFlush(rtc);
+        }
+        this.collectiveRisk = rk.getCollectiveRisk();
+
+        CalculationVariableParameters cvr = new CalculationVariableParameters();
+        cvr.setCalculation(this.calc);
+        cvr.setWindSpeed(startData.getCalculationVariableParameters().getWindSpeed());
+        cvr.setEquipmentPressure(startData.getCalculationVariableParameters().getEquipmentPressure());
+        cvr.setAtmosphericPressure(startData.getCalculationVariableParameters().getAtmosphericPressure());
+        cvr.setLiquidTemperature(startData.getCalculationVariableParameters().getLiquidTemperature());
+        cvr.setOutsideTemperature(startData.getCalculationVariableParameters().getCurrentTemperature());
+        cvr.setNumberOfWorkers(startData.getCalculationVariableParameters().getNumberOfWorkers());
+        cvpRepo.saveAndFlush(cvr);
         //calc.setMatterConsumption(amount.getProductConsumption()); когда разберусь, когда этот параметр есть, а когда нет
 
         //Здесь мы складываем получившиеся результаты в объекты типа EmergencySubTypeDamageCalculation
@@ -135,6 +164,7 @@ public class CalculationLogic {
         //мы заводим 2 массива, один для последуюзщей записи в базу
         //другой для отправки клиенту
         resultsForClient = new HashMap<>();
+        potentialRisks = new HashMap<>();
         for (int j = 0; j < emergencies.size(); j++) {
             if (mathModelsOfEmergencies.get(j).getType().equals("Взрыв")) {
                 List<ExposureType> explosionExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -192,6 +222,7 @@ public class CalculationLogic {
                     explosionDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(explosionDamageForClient);
                 }
+                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else if (mathModelsOfEmergencies.get(j).getType().equals("Пожар")) {
                 List<ExposureType> heatExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -231,6 +262,7 @@ public class CalculationLogic {
                     heatDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(heatDamageForClient);
                 }
+                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else {
                 List<ExposureType> flashExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -268,6 +300,7 @@ public class CalculationLogic {
                     flashDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(flashDamageForClient);
                 }
+                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             }
         }

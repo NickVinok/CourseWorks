@@ -11,8 +11,9 @@ public class Territory {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
-    private double distanceFromPreviousTerritory;
+    private double territoryRadius;
     private double populationDensity;
+    private int order;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "zoneId", referencedColumnName = "id")

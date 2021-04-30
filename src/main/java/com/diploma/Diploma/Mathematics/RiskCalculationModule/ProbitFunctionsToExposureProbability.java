@@ -23,9 +23,6 @@ public class ProbitFunctionsToExposureProbability {
         List<Double> probabilities = new ArrayList<>();
         for(Double probit: probitValues){
             for(int j=0;j<limitValues.size();j++){
-                if(probit<7 && j>96){
-                    System.out.println();
-                }
                 if(probit<limitValues.get(j) && j==0){
                     probabilities.add(0d);
                     break;
@@ -43,7 +40,7 @@ public class ProbitFunctionsToExposureProbability {
                 } else if(probit.equals(limitValues.get(j))){
                     probabilities.add(j+1d);
                 } else if(probit>limitValues.get(j)&&limitValues.size()-1 == j){
-                    probabilities.add(1d);
+                    probabilities.add(100d);
                 }
             }
         }

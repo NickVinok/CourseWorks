@@ -11,5 +11,5 @@ public class CalculationVariableParameters {
     private double equipmentPressure;
     private double holeHeight;
     private double holeDiameter;
-    private double numberOfWorkers;
+    private int numberOfWorkers;
 }

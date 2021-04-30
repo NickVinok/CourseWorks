@@ -12,6 +12,7 @@ public class Zone {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String name;
+    private double probabilityOfPresenceInZone;
 
     @Transient
     private String objectType = "zone";

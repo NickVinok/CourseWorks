@@ -1,6 +1,7 @@
 package com.diploma.Diploma.DataBase.Model;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 

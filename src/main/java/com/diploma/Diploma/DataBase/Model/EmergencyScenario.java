@@ -15,17 +15,14 @@ public class EmergencyScenario {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("isFullDestructionId")
     @JoinColumn(name = "isFullDestructionId", referencedColumnName = "id")
     private DestructionType destructionType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("eventId")
     @JoinColumn(name = "eventId", referencedColumnName = "id")
     private Event event;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("substanceTypeId")
     @JoinColumn(name = "substanceTypeId", referencedColumnName = "id")
     private SubstanceType substanceType;
 

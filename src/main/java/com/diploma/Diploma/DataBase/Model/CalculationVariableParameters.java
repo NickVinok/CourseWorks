@@ -22,7 +22,6 @@ public class CalculationVariableParameters {
     private int numberOfWorkers;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("calculationId")
     @JoinColumn(name = "calculationId", referencedColumnName = "id")
     private Calculation calculation;
 
