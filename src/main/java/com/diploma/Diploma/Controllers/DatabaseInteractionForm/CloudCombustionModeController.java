@@ -6,6 +6,7 @@ import com.diploma.Diploma.DataBase.Model.Keys.CloudCombustionModeKey;
 import com.diploma.Diploma.DataBase.Repo.CloudCombustionModeRepo;
 import com.diploma.Diploma.DataBase.Repo.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,8 @@ public class CloudCombustionModeController {
     CloudCombustionModeRepo repo;
 
     @PostMapping("/get")
-    public Optional<CloudCombustionMode> getCloudCombustionMode(@RequestBody CloudCombustionModeKey id) {
-        return repo.findById(id);
+    public Optional<CloudCombustionMode> getCloudCombustionMode(@RequestBody CloudCombustionMode ccm) {
+        return repo.findById(ccm.getCloudCombustionModeKey());
     }
 
     @GetMapping()
@@ -34,8 +35,13 @@ public class CloudCombustionModeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CloudCombustionMode> newCloudCombustionMode(@RequestBody CloudCombustionMode department){
-        return ResponseEntity.ok(repo.save(department));
+    public ResponseEntity<CloudCombustionMode> newCloudCombustionMode(@RequestBody CloudCombustionMode ccm){
+        Optional<CloudCombustionMode> tmp = repo.findById(ccm.getCloudCombustionModeKey());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else {
+            return ResponseEntity.ok(repo.save(ccm));
+        }
     }
 
     @PostMapping("/update")
@@ -44,12 +50,18 @@ public class CloudCombustionModeController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(cloudCombustionMode));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteCloudCombustionMode(@RequestBody CloudCombustionModeKey id){
-        repo.deleteById(id);
+    public ResponseEntity<CloudCombustionMode> deleteCloudCombustionMode(@RequestBody CloudCombustionMode ccm){
+        Optional<CloudCombustionMode> tmp = repo.findById(ccm.getCloudCombustionModeKey());
+        if(tmp.isPresent()) {
+            repo.deleteById(ccm.getCloudCombustionModeKey());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

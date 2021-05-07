@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.Zone;
 import com.diploma.Diploma.DataBase.Repo.ZoneRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +32,14 @@ public class ZoneController {
         return new Zone();
     }
 
-    @PostMapping("/upgrade")
-    public Zone newZone(@RequestBody Zone zone){
-        return repo.save(zone);
+    @PostMapping("/create")
+    public ResponseEntity<Zone> newZone(@RequestBody Zone zone){
+        Optional<Zone> tmp = repo.findById(zone.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(zone));
+        }
     }
 
     @PostMapping("/update")
@@ -42,12 +48,18 @@ public class ZoneController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(zone));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteZone(@RequestBody Zone zone){
-        repo.deleteById(zone.getId());
+    public ResponseEntity<Zone> deleteZone(@RequestBody Zone zone){
+        Optional<Zone> tmp = repo.findById(zone.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(zone.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

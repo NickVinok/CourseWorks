@@ -6,6 +6,7 @@ import com.diploma.Diploma.DataBase.Model.ExplosionSensitivity;
 import com.diploma.Diploma.DataBase.Repo.EventRepo;
 import com.diploma.Diploma.DataBase.Repo.ExplosionSensitivityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,13 @@ public class ExplosionSensitivityController {
     }
 
     @PostMapping("/create")
-    public ExplosionSensitivity newEvent(@RequestBody ExplosionSensitivity event){
-        return repo.save(event);
+    public ResponseEntity<ExplosionSensitivity> newEvent(@RequestBody ExplosionSensitivity event){
+        Optional<ExplosionSensitivity> tmp = repo.findById(event.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(event));
+        }
     }
 
     @PostMapping("/update")
@@ -44,12 +50,18 @@ public class ExplosionSensitivityController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(event));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteEvent(@RequestBody ExplosionSensitivity event){
-        repo.deleteById(event.getId());
+    public ResponseEntity<ExplosionSensitivity> deleteEvent(@RequestBody ExplosionSensitivity event){
+        Optional<ExplosionSensitivity> tmp = repo.findById(event.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(event.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

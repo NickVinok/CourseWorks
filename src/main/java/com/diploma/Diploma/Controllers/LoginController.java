@@ -33,27 +33,20 @@ public class LoginController {
             incorrectPasswordResponse.setLogin(loginRequest.getLogin());
             response = incorrectPasswordResponse;
         }
-        else if(this.loginLogic.getLoginResponse().isResearcher()) {
+
+        else if(this.loginLogic.getLoginResponse().getUser().getRole().getName().equals("Проектировщик") ||
+                this.loginLogic.getLoginResponse().getUser().getRole().getName().equals("Designer")) {
             LoginResearcherResponse researcherResponse = new LoginResearcherResponse();
             researcherResponse.setLoginResponse(this.loginLogic.getLoginResponse());
-            researcherResponse.setInitialDataForCalculation(this.loginLogic.getUserFormData());
-            researcherResponse.setLogin(loginRequest.getLogin());
+            researcherResponse.setInitialDataForCalculation(this.loginLogic.getDesignerFormData());
             response = researcherResponse;
         }
-        else if(this.loginLogic.getLoginResponse().isEnterpriseAdmin()) {
-            LoginEnterpriseAdminResponse loginEnterpriseAdminResponse = new LoginEnterpriseAdminResponse();
-            loginEnterpriseAdminResponse.setLoginResponse(this.loginLogic.getLoginResponse());
-            response = loginEnterpriseAdminResponse;
-        }
-        else if(this.loginLogic.getLoginResponse().isHeadResearcher()) {
-            LoginHeadResearcherResponse loginHeadResearcherResponse = new LoginHeadResearcherResponse();
-            loginHeadResearcherResponse.setLoginResponse(this.loginLogic.getLoginResponse());
-            response = loginHeadResearcherResponse;
-        }
-        else if(this.loginLogic.getLoginResponse().isSecurityManager()){
-            LoginSecurityManagerResponse loginSecurityManagerResponse = new LoginSecurityManagerResponse();
-            loginSecurityManagerResponse.setLoginResponse(this.loginLogic.getLoginResponse());
-            response = loginSecurityManagerResponse;
+        else if(!this.loginLogic.getLoginResponse().getUser().getRole().getName().contains("Проектировщик") &&
+                !this.loginLogic.getLoginResponse().getUser().getRole().getName().contains("Designer")){
+            LoginAdminResponse adminResponse = new LoginAdminResponse();
+            adminResponse.setLoginResponse(this.loginLogic.getLoginResponse());
+            adminResponse.setAdminFormData(this.loginLogic.getAdminFormData());
+            response = adminResponse;
         }
         else {
             response = new LoginErrorResponse();

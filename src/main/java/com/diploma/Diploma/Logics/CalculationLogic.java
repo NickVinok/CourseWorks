@@ -59,7 +59,8 @@ public class CalculationLogic {
     private ArrayList<EmergencySubTypeDamageCalculation> resultsForDb;
     private HashMap<String, ArrayList<CalculationResults>> resultsForClient;
     private Calculation calc;
-    private HashMap<String, ArrayList<Double>> potentialRisks;
+    private ArrayList<Double> potentialRisk;
+    private HashMap<String, ArrayList<Double>> potentialRisksForEmergencySubtypes;
     private ArrayList<RiskInTerritoryCalculation> avgIndividualRisk;
     private double collectiveRisk;
 
@@ -125,7 +126,7 @@ public class CalculationLogic {
         rk.calculate(pds.getDepressurizationFrequency(), emergencyProbabilities,
                 exposureProbabilitiesForAllEmergencies, amount.getRadiusArray(), territoryList, startData.getEnterprise().getArea(),
                 startData.getCalculationVariableParameters().getNumberOfWorkers());
-
+        this.potentialRisk = rk.getPotentialRisk();
         this.calc = new Calculation();
         calc.setTime(new Timestamp(System.currentTimeMillis()));
         calc.setUser(userRepo.findByLogin(startData.getUser()).get());
@@ -152,7 +153,7 @@ public class CalculationLogic {
         cvr.setLiquidTemperature(startData.getCalculationVariableParameters().getLiquidTemperature());
         cvr.setOutsideTemperature(startData.getCalculationVariableParameters().getCurrentTemperature());
         cvr.setNumberOfWorkers(startData.getCalculationVariableParameters().getNumberOfWorkers());
-        cvpRepo.saveAndFlush(cvr);
+        cvpRepo.save(cvr);
         //calc.setMatterConsumption(amount.getProductConsumption()); когда разберусь, когда этот параметр есть, а когда нет
 
         //Здесь мы складываем получившиеся результаты в объекты типа EmergencySubTypeDamageCalculation
@@ -164,7 +165,7 @@ public class CalculationLogic {
         //мы заводим 2 массива, один для последуюзщей записи в базу
         //другой для отправки клиенту
         resultsForClient = new HashMap<>();
-        potentialRisks = new HashMap<>();
+        potentialRisksForEmergencySubtypes = new HashMap<>();
         for (int j = 0; j < emergencies.size(); j++) {
             if (mathModelsOfEmergencies.get(j).getType().equals("Взрыв")) {
                 List<ExposureType> explosionExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -222,7 +223,7 @@ public class CalculationLogic {
                     explosionDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(explosionDamageForClient);
                 }
-                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
+                potentialRisksForEmergencySubtypes.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else if (mathModelsOfEmergencies.get(j).getType().equals("Пожар")) {
                 List<ExposureType> heatExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -262,7 +263,7 @@ public class CalculationLogic {
                     heatDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(heatDamageForClient);
                 }
-                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
+                potentialRisksForEmergencySubtypes.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             } else {
                 List<ExposureType> flashExposures = exposureTypeRepo.findByEmergencyId(emergencyObjects.get(j).getEmergency().getId());
@@ -300,10 +301,11 @@ public class CalculationLogic {
                     flashDamageForClient.setExposureTypeValueMap(explosionExposureTypeValues);
                     calculationResults.add(flashDamageForClient);
                 }
-                potentialRisks.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
+                potentialRisksForEmergencySubtypes.put(emergencyObjects.get(j).getName(), potentialRisksForEmergencies);
                 resultsForClient.put(emergencyObjects.get(j).getName(), calculationResults);
             }
         }
+
     }
 
     private List<BaseModel> convertEmergenciesToMathModels(List<EmergencySubType> emergencies) {

@@ -1,11 +1,13 @@
 package com.diploma.Diploma.Controllers.DatabaseInteractionForm;
 
+import com.diploma.Diploma.DataBase.Model.CalculationVariableParameters;
 import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.ClutterClass;
 import com.diploma.Diploma.DataBase.Model.Event;
 import com.diploma.Diploma.DataBase.Repo.ClutterClassRepo;
 import com.diploma.Diploma.DataBase.Repo.EventRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +36,13 @@ public class ClutterClassController {
     }
 
     @PostMapping("/create")
-    public ClutterClass newEvent(@RequestBody ClutterClass event){
-        return repo.save(event);
+    public ResponseEntity<ClutterClass> newEvent(@RequestBody ClutterClass cc){
+        Optional<ClutterClass> tmp = repo.findById(cc.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(cc));
+        }
     }
 
     @PostMapping("/update")
@@ -44,12 +51,18 @@ public class ClutterClassController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(event));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteEvent(@RequestBody ClutterClass event){
-        repo.deleteById(event.getId());
+    public ResponseEntity<ClutterClass> deleteEvent(@RequestBody ClutterClass cc){
+        Optional<ClutterClass> tmp = repo.findById(cc.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(cc.getId());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

@@ -6,13 +6,15 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "right")
-public class Rights {
+@Table(name = "tables")
+public class Tables {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
+    private String translation;
 
     @Transient
-    private String objectType = "rights";
+    private String objectType = "tables";
 }

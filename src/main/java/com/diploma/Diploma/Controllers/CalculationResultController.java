@@ -21,7 +21,8 @@ public class CalculationResultController {
 
         CalculationResponse calculationResponse = new CalculationResponse();
         calculationResponse.setEmergencies(calculationLogic.getResultsForClient());
-        calculationResponse.setPotentialRisks(calculationLogic.getPotentialRisks());
+        calculationResponse.setPotentialRisksForEmergencySubtypes(calculationLogic.getPotentialRisksForEmergencySubtypes());
+        calculationResponse.setPotentialRisks(calculationLogic.getPotentialRisk());
         calculationResponse.setAvgIndividualRisks(calculationLogic.getAvgIndividualRisk());
         calculationResponse.setCollectiveRisks(calculationLogic.getCollectiveRisk());
         emergencySubTypeDamageCalculationRepo.saveAll(calculationLogic.getResultsForDb());

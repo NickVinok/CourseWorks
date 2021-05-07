@@ -5,6 +5,7 @@ import com.diploma.Diploma.DataBase.Model.EmergencySubTypeCoefficients;
 import com.diploma.Diploma.DataBase.Model.Keys.EmergencySubTypeCoefficientsKey;
 import com.diploma.Diploma.DataBase.Repo.EmergencySubTypeCoefficientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +34,14 @@ public class EmergencySubTypeCoefficientsController {
     }
 
     @PostMapping("/create")
-    public EmergencySubTypeCoefficients newEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergencySubTypeCoefficients){
+    public ResponseEntity<EmergencySubTypeCoefficients> newEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergencySubTypeCoefficients){
         //System.out.println(emergencySubTypeCoefficients);
-        return repo.save(emergencySubTypeCoefficients);
+        var obj = repo.findById(emergencySubTypeCoefficients.getEmergencySubTypeCoefficientsKey());
+        if(obj.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(obj.get());
+        } else{
+            return ResponseEntity.ok(repo.save(emergencySubTypeCoefficients));
+        }
     }
 
     @PostMapping("/update")
@@ -44,12 +50,18 @@ public class EmergencySubTypeCoefficientsController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(emergency));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergency){
-        repo.deleteById(emergency.getEmergencySubTypeCoefficientsKey());
+    public ResponseEntity<EmergencySubTypeCoefficients> deleteEmergencySubTypeCoefficients(@RequestBody EmergencySubTypeCoefficients emergency){
+        Optional<EmergencySubTypeCoefficients> tmp = repo.findById(emergency.getEmergencySubTypeCoefficientsKey());
+        if(tmp.isPresent()) {
+            repo.deleteById(emergency.getEmergencySubTypeCoefficientsKey());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

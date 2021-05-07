@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.SubstanceType;
 import com.diploma.Diploma.DataBase.Repo.SubstanceTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,13 @@ public class SubstanceTypeController {
     }
 
     @PostMapping("/create")
-    public SubstanceType newSubstanceType(@RequestBody SubstanceType substance){
-        return repo.save(substance);
+    public ResponseEntity<SubstanceType> newSubstanceType(@RequestBody SubstanceType substance){
+        Optional<SubstanceType> tmp = repo.findById(substance.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(substance));
+        }
     }
 
     @PostMapping("/update")
@@ -42,12 +48,18 @@ public class SubstanceTypeController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(substance));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteSubstanceType(@RequestBody SubstanceType substance){
-        repo.deleteById(substance.getId());
+    public ResponseEntity<SubstanceType> deleteSubstanceType(@RequestBody SubstanceType substance){
+        Optional<SubstanceType> tmp = repo.findById(substance.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(substance.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

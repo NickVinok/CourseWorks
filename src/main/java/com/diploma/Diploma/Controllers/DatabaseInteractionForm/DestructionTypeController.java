@@ -5,6 +5,7 @@ import com.diploma.Diploma.DataBase.Model.Department;
 import com.diploma.Diploma.DataBase.Model.DestructionType;
 import com.diploma.Diploma.DataBase.Repo.DestructionTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,12 @@ public class DestructionTypeController {
 
     @PostMapping("/create")
     public ResponseEntity<DestructionType> newDestructionType(@RequestBody DestructionType destructionType){
-        return ResponseEntity.ok(repo.save(destructionType));
+        Optional<DestructionType> tmp = repo.findById(destructionType.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(destructionType));
+        }
     }
 
     @PostMapping("/update")
@@ -43,12 +49,19 @@ public class DestructionTypeController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(destructionType));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteDestructionType(@RequestBody DestructionType destructionType){
-        repo.deleteById(destructionType.getId());
+    public ResponseEntity<DestructionType> deleteDestructionType(@RequestBody DestructionType destructionType){
+        Optional<DestructionType> tmp = repo.findById(destructionType.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(destructionType.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }

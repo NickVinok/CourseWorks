@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.PotentiallyDangerousSituation;
 import com.diploma.Diploma.DataBase.Repo.PotentiallyDangerousSituationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +34,14 @@ public class  PotentiallyDangerousSituationController {
     }
 
     @PostMapping("/create")
-    public PotentiallyDangerousSituation newPotentiallyDangerousSituation(
+    public ResponseEntity<PotentiallyDangerousSituation> newPotentiallyDangerousSituation(
             @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation){
-        return repo.save(potentiallyDangerousSituation);
+        Optional<PotentiallyDangerousSituation> tmp = repo.findById(potentiallyDangerousSituation.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(potentiallyDangerousSituation));
+        }
     }
 
     @PostMapping("/update")
@@ -45,14 +51,21 @@ public class  PotentiallyDangerousSituationController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(potentiallyDangerousSituation));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deletePotentiallyDangerousSituation(
+    public ResponseEntity<PotentiallyDangerousSituation> deletePotentiallyDangerousSituation(
             @RequestBody PotentiallyDangerousSituation potentiallyDangerousSituation
     ){
-        repo.deleteById(potentiallyDangerousSituation.getId());
+        Optional<PotentiallyDangerousSituation> tmp = repo.findById(potentiallyDangerousSituation.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(potentiallyDangerousSituation.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }

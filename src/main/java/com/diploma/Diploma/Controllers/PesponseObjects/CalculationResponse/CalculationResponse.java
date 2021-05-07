@@ -12,7 +12,8 @@ import java.util.HashMap;
 @Data
 public class CalculationResponse {
     private HashMap<String, ArrayList<CalculationResults>> emergencies;
-    private HashMap<String, ArrayList<Double>> potentialRisks;
+    private HashMap<String, ArrayList<Double>> potentialRisksForEmergencySubtypes;
+    private ArrayList<Double> potentialRisks;
     private ArrayList<RiskInTerritoryCalculation> avgIndividualRisks;
     private double collectiveRisks;
 }

@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EquipmentType;
 import com.diploma.Diploma.DataBase.Repo.EquipmentTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,13 @@ public class EquipmentTypeController {
     }
 
     @PostMapping("/create")
-    public EquipmentType newEquipmentType(@RequestBody EquipmentType equipmentType){
-        return repo.save(equipmentType);
+    public ResponseEntity<EquipmentType> newEquipmentType(@RequestBody EquipmentType equipmentType){
+        Optional<EquipmentType> tmp = repo.findById(equipmentType.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(equipmentType));
+        }
     }
 
     @PostMapping("/update")
@@ -42,12 +48,19 @@ public class EquipmentTypeController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(equipmentType));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteEquipmentType(@RequestBody EquipmentType equipmentType){
-        repo.deleteById(equipmentType.getId());
+    public ResponseEntity<EquipmentType> deleteEquipmentType(@RequestBody EquipmentType equipmentType){
+        Optional<EquipmentType> tmp = repo.findById(equipmentType.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(equipmentType.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }

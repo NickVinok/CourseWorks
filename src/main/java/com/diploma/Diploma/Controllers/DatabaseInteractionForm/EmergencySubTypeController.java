@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.EmergencySubType;
 import com.diploma.Diploma.DataBase.Repo.EmergencySubTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,13 @@ public class EmergencySubTypeController {
     }
 
     @PostMapping("/create")
-    public EmergencySubType newEmergencySubType(@RequestBody EmergencySubType emergency){
-        return repo.save(emergency);
+    public ResponseEntity<EmergencySubType> newEmergencySubType(@RequestBody EmergencySubType emergency){
+        Optional<EmergencySubType> tmp = repo.findById(emergency.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(emergency));
+        }
     }
 
     @PostMapping("/update")
@@ -42,12 +48,18 @@ public class EmergencySubTypeController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(emergency));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
-    @PostMapping("/{id}")
-    public void deleteEmergencySubType(@RequestBody EmergencySubType emergency){
-        repo.deleteById(emergency.getId());
+    @PostMapping("/delete")
+    public ResponseEntity<EmergencySubType> deleteEmergencySubType(@RequestBody EmergencySubType emergency){
+        Optional<EmergencySubType> tmp = repo.findById(emergency.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(emergency.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

@@ -32,37 +32,12 @@ public class LoginService {
             String hashedPass;
             try {
                 hashedPass = hashService.encode(password);
-            }catch (Exception e){
+            }catch (Exception e) {
                 hashedPass = password;
             }
             if(user.get().getPassword().equals(hashedPass)){
                 response.setPasswordCorrect(true);
-                //Если роль пользователя - админ
-                if(user.get().getRole().getName().equals("enterpriseAdmin")){
-                    response.setEnterpriseAdmin(true);
-                    response.setResearcher(false);
-                    response.setHeadResearcher(false);
-                    response.setSecurityManager(false);
-                }
-                //Если роль пользователя - исседователь
-                else if(user.get().getRole().getName().equals("researcher")){
-                    response.setEnterpriseAdmin(false);
-                    response.setResearcher(true);
-                    response.setHeadResearcher(false);
-                    response.setSecurityManager(false);
-                }
-                else if(user.get().getRole().getName().equals("headResearcher")){
-                    response.setEnterpriseAdmin(false);
-                    response.setResearcher(false);
-                    response.setHeadResearcher(true);
-                    response.setSecurityManager(false);
-                }
-                else if(user.get().getRole().getName().equals("securityManager")){
-                    response.setEnterpriseAdmin(false);
-                    response.setResearcher(false);
-                    response.setHeadResearcher(false);
-                    response.setSecurityManager(true);
-                }
+                response.setUser(user.get());
             }
             //Если пароль неверен
             else{

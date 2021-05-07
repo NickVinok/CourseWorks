@@ -4,6 +4,7 @@ import com.diploma.Diploma.DataBase.Model.CloudCombustionMode;
 import com.diploma.Diploma.DataBase.Model.GeneralCoefficients;
 import com.diploma.Diploma.DataBase.Repo.GeneralCoefficientsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,13 @@ public class GeneralCoefficientsController {
     }
 
     @PostMapping("/create")
-    public GeneralCoefficients newGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
-        return repo.save(generalCoefficients);
+    public ResponseEntity<GeneralCoefficients> newGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
+        Optional<GeneralCoefficients> tmp = repo.findById(generalCoefficients.getId());
+        if(tmp.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else{
+            return ResponseEntity.ok(repo.save(generalCoefficients));
+        }
     }
 
     @PostMapping("/update")
@@ -42,12 +48,18 @@ public class GeneralCoefficientsController {
         if(tmp.isPresent()){
             return ResponseEntity.ok(repo.save(generalCoefficients));
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
     @PostMapping("/delete")
-    public void deleteGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
-        repo.deleteById(generalCoefficients.getId());
+    public ResponseEntity<GeneralCoefficients> deleteGeneralCoefficients(@RequestBody GeneralCoefficients generalCoefficients){
+        Optional<GeneralCoefficients> tmp = repo.findById(generalCoefficients.getId());
+        if(tmp.isPresent()){
+            repo.deleteById(generalCoefficients.getId());
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

@@ -17,14 +17,19 @@ public class UserService {
     @Autowired
     private HashService hashService;
 
-    public User CreateNewUser(User u){
-        String pass = u.getPassword();
-        try {
-            u.setPassword(hashService.encode(u.getPassword()));
-        } catch(Exception ignored){
-            u.setPassword(pass);
+    public Optional<User> CreateNewUser(User u){
+        Optional<User> tmp = repo.findById(u.getId());
+        if(tmp.isPresent()){
+            return Optional.empty();
+        } else {
+            String pass = u.getPassword();
+            try {
+                u.setPassword(hashService.encode(u.getPassword()));
+            } catch(Exception ignored){
+                u.setPassword(pass);
+            }
+            return Optional.of(repo.save(u));
         }
-        return repo.save(u);
     }
 
     public List<User> GetAllUsers(){
@@ -50,7 +55,13 @@ public class UserService {
         }
     }
 
-    public void DeleteUser(User u){
-        repo.delete(u);
+    public Optional<User> DeleteUser(User u){
+        Optional<User> tmp = repo.findById(u.getId());
+        if(tmp.isPresent()){
+            repo.delete(u);
+            return tmp;
+        } else{
+            return Optional.empty();
+        }
     }
 }
