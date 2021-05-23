@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/scenarioNode")
+@RequestMapping("/emergencyScenarioNode")
 public class ScenarioNodeController {
     @Autowired
     ScenarioNodeRepo repo;
