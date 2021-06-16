@@ -50,7 +50,7 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestBody User user){
         Optional<User> tmp = userService.UpdateUser(user);
         if(tmp.isPresent()){
-            return ResponseEntity.ok(repo.save(user));
+            return ResponseEntity.ok(repo.save(tmp.get()));
         } else{
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
